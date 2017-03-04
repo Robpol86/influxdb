@@ -1,0 +1,17 @@
+version: '2'
+
+volumes:
+  influxdb_persist_dir: {}
+
+networks:
+  backend: {}
+
+services:
+  influxdb:
+    container_name: influxdb
+    image: influxdb
+    networks: [backend]
+    ports: ['8083:8083', '8086:8086']
+    restart: always
+    volumes:
+      - influxdb_persist_dir:/var/lib/influxdb
