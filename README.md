@@ -53,4 +53,6 @@ have a slightly different setup. Look at configs such as [docker-compose.yml](do
 Once you're done you can start everything up:
 ```bash
 cd /opt/influxdb; sudo docker-compose up -d
+sudo firewall-cmd --permanent --add-port=8086/tcp
+sudo systemctl restart firewalld.service
 ```
