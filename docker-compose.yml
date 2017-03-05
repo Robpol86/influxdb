@@ -1,8 +1,5 @@
 version: '3'
 
-volumes:
-  influxdb_persist_dir: {}
-
 networks:
   backend: {}
 
@@ -18,4 +15,4 @@ services:
     restart: always
     volumes:
       - /etc/filesrv.rob86.net.pem:/etc/ssl/influxdb.pem
-      - influxdb_persist_dir:/var/lib/influxdb
+      - /storage/Local/influxdb:/var/lib/influxdb
