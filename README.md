@@ -39,6 +39,11 @@ url="https://github.com/docker/compose/releases/download/$version/docker-compose
 sudo curl -L $url -o /usr/local/bin/docker-compose; sudo chmod +x $_
 ```
 
+Since we're configuring InfluxDB with SSL certificates it is expected that you already place your SSL certs in `/etc` on
+the Docker host. Cat your SSL private key and certificate and place it in `/etc/filesrv.rob86.net.pem` with `chmod 0400`
+(since it contains the SSL private key, only root should be able to read). "filesrv.rob86.net" is my server's hostname,
+substitute that with your server's.
+
 ## Installation & Configuration
 
 Clone this repo locally (or fork it and clone that repo) to your Docker host. I put mine in `/opt/influxdb`:
