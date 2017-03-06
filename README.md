@@ -15,6 +15,8 @@ I also use the following services:
 * [SparkPost](https://www.sparkpost.com/pricing/) free tier for sending alerts emails.
 * [Tor](https://www.torproject.org/) for our external Linux system to get around NAT/Firewalls.
 
-There's more information and instructions available on
-[this repo's wiki](https://github.com/Robpol86/influxdb/wiki). I've documented everything I need to get up and running
-on my server in case I ever need to replace it from scratch.
+## Instructions
+
+[Visit the wiki](https://github.com/Robpol86/influxdb/wiki) for instructions on how to use this repository for your own
+metrics/graphing setup at home. I've documented everything I need to get up and running on my server in case I ever need
+to replace it from scratch.
