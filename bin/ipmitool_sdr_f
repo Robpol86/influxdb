@@ -1,0 +1,26 @@
+#!/usr/bin/awk -f
+
+function fahrenheit(celsius) {
+    return (9 / 5) * celsius + 32
+}
+
+function spaces(count) {
+    pad = ""
+    for (i=0; i < count; i++) {
+        pad = pad " "
+    }
+    return pad
+}
+
+BEGIN {
+    while ("ipmitool sdr" |getline) {
+        if (match($0, /([0-9]+) degrees C +/, matched)) {
+            replacement = fahrenheit(matched[1]) " degrees F"
+            padding = length(matched[0]) - length(replacement)
+            sub(matched[0], replacement spaces(padding))
+            print $0
+        } else {
+            print $0
+        }
+    }
+}
