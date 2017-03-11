@@ -1,4 +1,4 @@
-# InfluxDB, Chronograf, Kapacitor, Raspberry Pi
+# InfluxDB, Grafana, Kapacitor, Raspberry Pi
 
 > This repository is currently a work in progress.
 
@@ -6,7 +6,7 @@ This is the [docker-compose](https://docs.docker.com/compose/) stack I use for m
 the following containers:
 
 * [InfluxDB](https://docs.influxdata.com/influxdb/) to store all of the metrics (the central piece of the setup).
-* [Chronograf](https://docs.influxdata.com/chronograf/) to show pretty graphs (like [Grafana](http://grafana.org/)).
+* [Grafana](http://grafana.org/) to show pretty graphs of all the metrics
 * [Kapacitor](https://docs.influxdata.com/kapacitor/) to email alerts when things break.
 * [Raspberry Pi](https://robpol86.com/raspberry_pi_project_fi.html) or other Linux system for external monitoring.
 
