@@ -1,22 +1,24 @@
 version: '3'
 
 services:
-  influxdb:
-    container_name: influxdb
-    environment:
-      - INFLUXDB_HTTP_AUTH_ENABLED=true
-      - INFLUXDB_HTTP_HTTPS_ENABLED=true
-    image: influxdb
-    ports: ['8086:8086']
+  nginx:
+    image: nginx
+    ports: ['3000:3000', '8086:8086']
     restart: always
     volumes:
-      - /etc/filesrv.rob86.net.pem:/etc/ssl/influxdb.pem
-      - /storage/Local/influxdb:/var/lib/influxdb
+      - ./etc/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/filesrv.rob86.net.cert.pem:/etc/ssl/cert.pem:ro
+      - /etc/filesrv.rob86.net.key.pem:/etc/ssl/key.pem:ro
+
+  influxdb:
+    container_name: influxdb
+    environment: [INFLUXDB_HTTP_AUTH_ENABLED=true]
+    image: influxdb
+    restart: always
+    volumes: ['/storage/Local/influxdb:/var/lib/influxdb']
 
   grafana:
     container_name: grafana
     image: grafana/grafana
-    ports: ['3000:3000']
     restart: always
-    volumes:
-      - /storage/Local/grafana:/var/lib/grafana
+    volumes: ['/storage/Local/grafana:/var/lib/grafana']
