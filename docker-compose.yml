@@ -19,6 +19,7 @@ services:
 
   grafana:
     container_name: grafana
+    environment: [GF_SECURITY_DISABLE_GRAVATAR=true, GF_USERS_ALLOW_SIGN_UP=false]
     image: grafana/grafana
     restart: always
     volumes: ['/storage/Local/grafana:/var/lib/grafana']
