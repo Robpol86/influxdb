@@ -177,25 +177,29 @@
 had to prepare my server by installing Docker and other software.</p>
 <div class="section" id="ssl-certificate">
 <h2>SSL Certificate<a class="headerlink" href="#ssl-certificate" title="Permalink to this headline">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">If you don&#8217;t want to use SSL certificates (not really necessary for a home network, I just like having it) you
+should be fine tweaking your docker-compose.yaml file to have Grafana and InfluxDB expose ports and remove the nginx
+section.</p>
+</div>
 <p>In addition to my home server I also have a <a class="reference external" href="https://robpol86.com/root_certificate_authority.html">home root CA</a> to
 generate SSL certificates for HTTP services running on my home network. Things such as IPMI web interfaces, my WiFi
 access point administration page, etc.</p>
 <p>SSL is implemented by an <a class="reference external" href="https://github.com/Robpol86/influxdb/blob/master/etc/nginx.conf">NGINX reverse proxy</a>. All
 exposed ports in my <a class="reference external" href="https://github.com/Robpol86/influxdb/blob/master/docker-compose.yml">Compose file</a> are routed
-through the NGINX container which terminates SSL. This way Grafana/Influxdb/etc talk to each other in clear text
+through the NGINX container which terminates SSL. This way Grafana/InfluxDB/etc talk to each other in clear text
 internally allowing me to use convenient hostnames such as &#8220;localhost&#8221; or &#8220;influxdb&#8221; and not the fully qualified name of
 my server which is required by the SSL certificate.</p>
-<p>If you don&#8217;t want to use SSL certificates (not really necessary for a home network, I just like having it) you should be
-fine tweaking your docker-compose.yaml file to have Grafana/Influxdb/etc expose ports and remove the nginx section.</p>
 <p>Since I&#8217;ll be using an SSL certificate I need to install it (along with the corresponding private key) on my server
 outside of Docker. I put it in <code class="docutils literal"><span class="pre">/etc</span></code>:</p>
-<ol class="arabic simple">
-<li>SCP <code class="docutils literal"><span class="pre">filesrv.rob86.net.cert.pem</span></code> and <code class="docutils literal"><span class="pre">filesrv.rob86.net.key.pem</span></code> to home directory.</li>
-<li><code class="docutils literal"><span class="pre">cat</span> <span class="pre">*.key.pem</span> <span class="pre">*.cert.pem</span> <span class="pre">&gt;</span> <span class="pre">filesrv.rob86.net.pem</span></code></li>
-<li><code class="docutils literal"><span class="pre">for</span> <span class="pre">f</span> <span class="pre">in</span> <span class="pre">*.pem;</span> <span class="pre">do</span> <span class="pre">sudo</span> <span class="pre">sh</span> <span class="pre">-c</span> <span class="pre">&quot;umask</span> <span class="pre">0277</span> <span class="pre">&amp;&amp;</span> <span class="pre">cp</span> <span class="pre">$HOME/$f</span> <span class="pre">/etc/$f&quot;;</span> <span class="pre">done</span></code></li>
-<li><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">chmod</span> <span class="pre">444</span> <span class="pre">/etc/filesrv.rob86.net.cert.pem</span></code></li>
-<li><code class="docutils literal"><span class="pre">rm</span> <span class="pre">~/*.pem</span></code></li>
-</ol>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># SCP filesrv.rob86.net.cert.pem and filesrv.rob86.net.key.pem to home directory.</span>
+cat *.key.pem *.cert.pem &gt; filesrv.rob86.net.pem
+<span class="k">for</span> f in *.pem<span class="p">;</span> <span class="k">do</span> sudo sh -c <span class="s2">&quot;umask 0277 &amp;&amp; cp </span><span class="nv">$HOME</span><span class="s2">/</span><span class="nv">$f</span><span class="s2"> /etc/</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">done</span>
+sudo chmod <span class="m">444</span> /etc/filesrv.rob86.net.cert.pem
+rm ~/*.pem
+</pre></div>
+</div>
 <p>The above was just a fancy way of putting the three files in <code class="docutils literal"><span class="pre">/etc</span></code> with <code class="docutils literal"><span class="pre">chmod</span> <span class="pre">400</span></code>. The cert-only file can be read
 by everyone so I chmodded it to 444 afterwards.</p>
 <p>Make sure your root CA file
@@ -226,7 +230,9 @@ sudo curl -L <span class="nv">$url</span> -o /usr/local/bin/docker-compose<span 
 <h3>/etc/resolv.conf Fix<a class="headerlink" href="#etc-resolv-conf-fix" title="Permalink to this headline">¶</a></h3>
 <p>I ran into a problem on my server during reboot: the containers wouldn&#8217;t auto-start on boot but would if I manually
 started them. I was seeing this error:</p>
-<p><code class="docutils literal"><span class="pre">Failed</span> <span class="pre">to</span> <span class="pre">start</span> <span class="pre">container</span> <span class="pre">06551c8e77474b48a:</span> <span class="pre">open</span> <span class="pre">/etc/resolv.conf:</span> <span class="pre">no</span> <span class="pre">such</span> <span class="pre">file</span> <span class="pre">or</span> <span class="pre">directory</span></code></p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>Failed to start container 06551c8e77474b48a: open /etc/resolv.conf: no such file or directory
+</pre></div>
+</div>
 <p>Turns out there was a race condition between NetworkManager waiting for DHCP and Docker starting the containers. Docker
 was too fast and tried to start containers before NetworkManager created the <code class="docutils literal"><span class="pre">/etc/resolv.conf</span></code> symlink. I fixed this
 by:</p>
@@ -259,7 +265,7 @@ by:</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 13, 2017, 3:06:50 AM.
+      Last updated on Mar 13, 2017, 3:35:41 AM.
 
     </p>
   </div>
@@ -283,8 +289,8 @@ by:</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="stage/prepare.html">stage</a></dd>
             <dd><a href="master/prepare.html">master</a></dd>
+            <dd><a href="stage/prepare.html">stage</a></dd>
         </dl>
     </div>
 </div>
