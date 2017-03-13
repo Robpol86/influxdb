@@ -57,7 +57,7 @@ Wait a few minutes and then verify data is being collected:
 
 .. code-block:: bash
 
-    sudo docker exec -it influxdb influx -ssl -unsafeSsl -database telegraf
+    sudo docker exec -it influxdb influx -database telegraf
 
 .. code-block:: sql
 

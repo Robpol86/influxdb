@@ -23,8 +23,10 @@ InfluxDB
     CREATE USER grafana WITH PASSWORD 'REPLACE_ME'
     GRANT READ ON telegraf TO grafana
 
-* **TODO**: use ``GRANT WRITE ON telegraf TO telegraf_filesrv`` once https://github.com/influxdata/telegraf/issues/2496
-  is fixed.
+.. note::
+
+    **TODO**: Use ``GRANT WRITE ON telegraf TO telegraf_filesrv`` once
+    https://github.com/influxdata/telegraf/issues/2496 is fixed.
 
 Grafana
 =======
