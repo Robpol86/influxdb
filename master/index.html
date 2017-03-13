@@ -100,8 +100,13 @@
           
             
             
-                <ul>
+                <p class="caption"><span class="caption-text">Guide</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
 </ul>
 
             
@@ -160,10 +165,51 @@
 
 <div class="section" id="home-monitoring">
 <h1>Home Monitoring<a class="headerlink" href="#home-monitoring" title="Permalink to this headline">¶</a></h1>
-<p>TODO</p>
-<div class="toctree-wrapper compound">
+<p>This is the <a class="reference external" href="https://docs.docker.com/compose">docker-compose</a> stack I use for my home network&#8217;s monitoring. It
+contains the following containers:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.influxdata.com/influxdb">InfluxDB</a> to store all of the metrics (the central piece of the setup).</li>
+<li><a class="reference external" href="http://grafana.org">Grafana</a> to show pretty graphs of all the metrics</li>
+<li><a class="reference external" href="https://docs.influxdata.com/kapacitor">Kapacitor</a> to email alerts when things break.</li>
+<li><a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">Raspberry Pi</a> or other Linux system for external monitoring.</li>
+</ul>
+<p>I also use the following services:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.sparkpost.com/pricing">SparkPost</a> free tier for sending alerts emails.</li>
+<li><a class="reference external" href="https://www.torproject.org">Tor</a> for our external Linux system to get around NAT/Firewalls.</li>
+</ul>
+<p>This website is my brain dump on how I got monitoring and alerting setup on my
+<a class="reference external" href="https://robpol86.com/my_awesome_server.html">home server</a> from scratch. If you plan on using it for your server
+you&#8217;ll need to be on the lookout for my hostnames and IP addresses and substitute them with your own.</p>
+<div class="toctree-wrapper compound" id="guide">
+<p class="caption"><span class="caption-text">Guide</span><a class="headerlink" href="#guide" title="Permalink to this toctree">¶</a></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#ssl-certificate">SSL Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#docker-and-compose">Docker and Compose</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#etc-resolv-conf-fix">/etc/resolv.conf Fix</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#clone">Clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#start-containers">Start Containers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config.html#influxdb">InfluxDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config.html#grafana">Grafana</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#tweak-and-verify">Tweak and Verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#getsockopt-connection-refused-fix">getsockopt: Connection Refused Fix</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
 </ul>
 </div>
 </div>
@@ -186,7 +232,7 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 13, 2017, 1:41:44 AM.
+      Last updated on Mar 13, 2017, 3:06:50 AM.
 
     </p>
   </div>

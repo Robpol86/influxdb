@@ -22,7 +22,7 @@
     </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Home Monitoring &mdash; InfluxDB Home Monitoring</title>
+  <title>Initial Configuration &mdash; InfluxDB Home Monitoring</title>
   
 
   
@@ -53,8 +53,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="InfluxDB Home Monitoring" href="#"/>
-        <link rel="next" title="Preparing the Server" href="prepare.html"/> 
+    <link rel="top" title="InfluxDB Home Monitoring" href="index.html"/>
+        <link rel="next" title="Telegraf on the Server" href="telegraf.html"/>
+        <link rel="prev" title="Installing this Repository" href="install.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -73,7 +74,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> InfluxDB Home Monitoring
+            <a href="index.html" class="icon icon-home"> InfluxDB Home Monitoring
           
 
           
@@ -101,10 +102,14 @@
             
             
                 <p class="caption"><span class="caption-text">Guide</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Initial Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#influxdb">InfluxDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grafana">Grafana</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
 </ul>
@@ -120,7 +125,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">InfluxDB Home Monitoring</a>
+        <a href="index.html">InfluxDB Home Monitoring</a>
       </nav>
 
 
@@ -139,14 +144,14 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
+    <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Home Monitoring</li>
+    <li>Initial Configuration</li>
     <li class="wy-breadcrumbs-aside">
       
           
           
-            <a href="https://github.com/Robpol86/influxdb/blob/master/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            <a href="https://github.com/Robpol86/influxdb/blob/master/docs/config.rst" class="fa fa-github"> Edit on GitHub</a>
           
         
       
@@ -163,54 +168,46 @@
 
 
 
-<div class="section" id="home-monitoring">
-<h1>Home Monitoring<a class="headerlink" href="#home-monitoring" title="Permalink to this headline">¶</a></h1>
-<p>This is the <a class="reference external" href="https://docs.docker.com/compose">docker-compose</a> stack I use for my home network&#8217;s monitoring. It
-contains the following containers:</p>
+<div class="section" id="initial-configuration">
+<span id="config"></span><h1>Initial Configuration<a class="headerlink" href="#initial-configuration" title="Permalink to this headline">¶</a></h1>
+<p>Now that the Docker Compose containers are running I need to do some initial configuration such as create users and
+databases in the Docker containers.</p>
+<div class="section" id="influxdb">
+<h2>InfluxDB<a class="headerlink" href="#influxdb" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Run the influx CLI in the container: <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">exec</span> <span class="pre">-it</span> <span class="pre">influxdb</span> <span class="pre">influx</span></code></li>
+<li>Then create users and databases (substitute <code class="docutils literal"><span class="pre">robpol86</span></code>, etc):</li>
+</ol>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">USER</span> <span class="n">robpol86</span> <span class="k">WITH</span> <span class="n">PASSWORD</span> <span class="s1">&#39;REPLACE_ME&#39;</span> <span class="k">WITH</span> <span class="k">ALL</span> <span class="k">PRIVILEGES</span>
+<span class="n">AUTH</span>
+<span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">telegraf</span>
+<span class="k">CREATE</span> <span class="k">USER</span> <span class="n">telegraf_filesrv</span> <span class="k">WITH</span> <span class="n">PASSWORD</span> <span class="s1">&#39;REPLACE_ME&#39;</span>
+<span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">TO</span> <span class="n">telegraf_filesrv</span>
+<span class="k">CREATE</span> <span class="k">USER</span> <span class="n">grafana</span> <span class="k">WITH</span> <span class="n">PASSWORD</span> <span class="s1">&#39;REPLACE_ME&#39;</span>
+<span class="k">GRANT</span> <span class="k">READ</span> <span class="k">ON</span> <span class="n">telegraf</span> <span class="k">TO</span> <span class="n">grafana</span>
+</pre></div>
+</div>
 <ul class="simple">
-<li><a class="reference external" href="https://docs.influxdata.com/influxdb">InfluxDB</a> to store all of the metrics (the central piece of the setup).</li>
-<li><a class="reference external" href="http://grafana.org">Grafana</a> to show pretty graphs of all the metrics</li>
-<li><a class="reference external" href="https://docs.influxdata.com/kapacitor">Kapacitor</a> to email alerts when things break.</li>
-<li><a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">Raspberry Pi</a> or other Linux system for external monitoring.</li>
+<li><strong>TODO</strong>: use <code class="docutils literal"><span class="pre">GRANT</span> <span class="pre">WRITE</span> <span class="pre">ON</span> <span class="pre">telegraf</span> <span class="pre">TO</span> <span class="pre">telegraf_filesrv</span></code> once <a class="reference external" href="https://github.com/influxdata/telegraf/issues/2496">https://github.com/influxdata/telegraf/issues/2496</a>
+is fixed.</li>
 </ul>
-<p>I also use the following services:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://www.sparkpost.com/pricing">SparkPost</a> free tier for sending alerts emails.</li>
-<li><a class="reference external" href="https://www.torproject.org">Tor</a> for our external Linux system to get around NAT/Firewalls.</li>
+</div>
+<div class="section" id="grafana">
+<h2>Grafana<a class="headerlink" href="#grafana" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Browse to <a class="reference external" href="https://filesrv.rob86.net:3000/profile">https://filesrv.rob86.net:3000/profile</a> (your Docker host&#8217;s hostname).</li>
+<li>Login with admin/admin.</li>
+<li>Change the password, put your real email, and set any other settings desired.</li>
+<li>Browse to <a class="reference external" href="https://filesrv.rob86.net:3000/org">https://filesrv.rob86.net:3000/org</a> and set name to &#8220;Home&#8221;.</li>
+<li>Browse to <a class="reference external" href="https://filesrv.rob86.net:3000/datasources/new">https://filesrv.rob86.net:3000/datasources/new</a> and set:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>Name: <strong>telegraf</strong>; Default: <strong>✓</strong>; Type: <strong>InfluxDB</strong></li>
+<li>Url: <strong>http://influxdb:8086</strong>; Access: <strong>proxy</strong></li>
+<li>Database: <strong>telegraf</strong>; User: <strong>grafana</strong>; Password: <strong>REPLACE_ME</strong></li>
 </ul>
-<p>This website is my brain dump on how I got monitoring and alerting setup on my
-<a class="reference external" href="https://robpol86.com/my_awesome_server.html">home server</a> from scratch. If you plan on using it for your server
-you&#8217;ll need to be on the lookout for my hostnames and IP addresses and substitute them with your own.</p>
-<div class="toctree-wrapper compound" id="guide">
-<p class="caption"><span class="caption-text">Guide</span><a class="headerlink" href="#guide" title="Permalink to this toctree">¶</a></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="prepare.html#ssl-certificate">SSL Certificate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prepare.html#docker-and-compose">Docker and Compose</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="prepare.html#etc-resolv-conf-fix">/etc/resolv.conf Fix</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#clone">Clone</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#start-containers">Start Containers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="config.html#influxdb">InfluxDB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config.html#grafana">Grafana</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="telegraf.html#install">Install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="telegraf.html#dependencies">Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="telegraf.html#tweak-and-verify">Tweak and Verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="telegraf.html#getsockopt-connection-refused-fix">getsockopt: Connection Refused Fix</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
-</ul>
+</div></blockquote>
 </div>
 </div>
 
@@ -221,8 +218,10 @@ you&#8217;ll need to be on the lookout for my hostnames and IP addresses and sub
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="prepare.html" class="btn btn-neutral float-right" title="Preparing the Server" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="telegraf.html" class="btn btn-neutral float-right" title="Telegraf on the Server" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="install.html" class="btn btn-neutral" title="Installing this Repository" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -256,8 +255,8 @@ you&#8217;ll need to be on the lookout for my hostnames and IP addresses and sub
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="stage/index.html">stage</a></dd>
-            <dd><a href="master/index.html">master</a></dd>
+            <dd><a href="../stage/config.html">stage</a></dd>
+            <dd><a href="config.html">master</a></dd>
         </dl>
     </div>
 </div>
