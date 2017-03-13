@@ -1,0 +1,9 @@
+# Configure.
+language: python
+python: 3.4
+sudo: false
+
+# Run.
+install: pip install docker-compose
+script:
+  - docker-compose config
