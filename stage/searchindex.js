@@ -1,1 +1,1 @@
-Search.setIndex({envversion:50,filenames:["index","prepare"],objects:{},objnames:{},objtypes:{},terms:{prepar:0,server:0,todo:[0,1]},titles:["InfluxDB, Grafana, Kapacitor, Raspberry Pi","Preparing the Server"],titleterms:{grafana:0,influxdb:0,kapacitor:0,prepar:1,raspberri:0,server:1}})
+Search.setIndex({envversion:50,filenames:["index","prepare"],objects:{},objnames:{},objtypes:{},terms:{prepar:0,server:0,todo:[0,1]},titles:["Home Monitoring","Preparing the Server"],titleterms:{home:0,monitor:0,prepar:1,server:1}})
