@@ -113,7 +113,10 @@
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#install-and-configure-tor">Install and Configure Tor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-and-configure-tor">Install and Configure Tor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#verifying">Verifying</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -230,6 +233,16 @@ sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</
 </div>
 <p>If you don&#8217;t have a <code class="docutils literal"><span class="pre">hostname</span></code> file in that directory try running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">restart</span> <span class="pre">tor</span></code> and tail
 <code class="docutils literal"><span class="pre">/var/log/tor/log</span></code> for any errors.</p>
+<div class="section" id="verifying">
+<h3>Verifying<a class="headerlink" href="#verifying" title="Permalink to this headline">¶</a></h3>
+<p>If you want to verify SSH is working over cellular and Tor you can install Tor on a client machine (I used a Fedora VM)
+and attempt to SSH in (remember to replace <code class="docutils literal"><span class="pre">name.onion</span></code> with the value from <code class="docutils literal"><span class="pre">/var/lib/tor/sshd/hostname</span></code> on the Pi):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf install tor socat
+sudo systemctl start tor
+ssh -o <span class="nv">ProxyCommand</span><span class="o">=</span><span class="s1">&#39;socat STDIO SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@name.onion
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
@@ -260,7 +273,7 @@ sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 14, 2017, 10:19:55 PM.
+      Last updated on Mar 14, 2017, 10:46:41 PM.
 
     </p>
   </div>
