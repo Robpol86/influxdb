@@ -192,27 +192,13 @@
 <div class="section" id="raspberry-pi-watchdog">
 <span id="raspberrypi"></span><h1>Raspberry Pi Watchdog<a class="headerlink" href="#raspberry-pi-watchdog" title="Permalink to this headline">¶</a></h1>
 <p>What if my server hangs or goes down when I&#8217;m not directly using it? All of this monitoring software I&#8217;m setting up
-won&#8217;t notify me when my server is unresponsive. My solution to this problem is a dedicated
-<a class="reference external" href="https://www.raspberrypi.org/products/">Raspberry Pi</a> on a
-<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">3G connection</a>.</p>
-<p>The setup will be as follows:</p>
-<ol class="arabic simple">
-<li>The Raspberry Pi will be on its own UPS and on its own network connection via <a class="reference external" href="https://fi.google.com">Project Fi</a>.
-If there is a power outage the Raspberry Pi should out-live my server&#8217;s UPS. Likewise if there is an internet outage
-the Raspberry Pi will be unaffected.</li>
-<li>Since the Raspberry Pi will be on a cellular network my server won&#8217;t be able to SSH into it. I also want to avoid
-opening ports to my server to allow the Raspberry Pi to SSH in (what if I plan on relocating the Raspberry Pi to a
-storage unit or some other place where it can be stolen and its private keys lifted). The solution is to put the
-Raspberry Pi&#8217;s SSH server behind a <a class="reference external" href="https://www.torproject.org/docs/tor-hidden-service.html">Tor hidden service</a>.</li>
-<li>My server will periodically SSH into my Raspberry Pi to collect some metrics to insert in InfluxDB.</li>
-<li>The Raspberry Pi will have a cron job that sends out an email if my server hasn&#8217;t logged in for a while.</li>
-</ol>
-<p>This setup allows me to be notified by my server if it cannot reach the Raspberry Pi, and be notified by the Raspberry
-Pi if my server can&#8217;t reach it.</p>
+won&#8217;t notify me when my server is unresponsive. My solution to this problem is a dedicated <a class="reference external" href="https://www.raspberrypi.org/products/">Raspberry Pi</a> with a
+<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">3G connection</a> on a <a class="reference external" href="https://www.amazon.com/APC-Back-UPS-Battery-Protector-BE425M/dp/B01HDC236Q/">UPS</a>. However these instructions should work on any Linux computer with a network connection.</p>
 <div class="section" id="preparing-the-pi">
 <h2>Preparing the Pi<a class="headerlink" href="#preparing-the-pi" title="Permalink to this headline">¶</a></h2>
-<p>This page assumes you&#8217;ve already setup a Raspberry Pi and have cellular (or WiFi) network access setup in a robust way
-where it auto-connects after the signal is dropped. I followed <a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a></p>
+<p>This page assumes you&#8217;ve already setup a Raspberry Pi and have cellular (or WiFi) network access. Be sure to configure
+it in such a way that it always connects to the internet after rebooting (not covered here). I followed
+<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a> for my 3G connection.</p>
 </div>
 </div>
 
@@ -237,7 +223,7 @@ where it auto-connects after the signal is dropped. I followed <a class="referen
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 13, 2017, 5:15:15 AM.
+      Last updated on Mar 14, 2017, 7:28:34 PM.
 
     </p>
   </div>
