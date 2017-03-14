@@ -228,6 +228,8 @@ sudo systemctl <span class="nb">enable</span> tor
 sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</span>
 </pre></div>
 </div>
+<p>If you don&#8217;t have a <code class="docutils literal"><span class="pre">hostname</span></code> file in that directory try running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">restart</span> <span class="pre">tor</span></code> and tail
+<code class="docutils literal"><span class="pre">/var/log/tor/log</span></code> for any errors.</p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
@@ -258,7 +260,7 @@ sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 14, 2017, 10:09:02 PM.
+      Last updated on Mar 14, 2017, 10:19:55 PM.
 
     </p>
   </div>
