@@ -243,7 +243,7 @@ and attempt to SSH in:</p>
 <span class="c1"># Add this to /etc/tor/torrc:</span>
 <span class="c1"># HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Docker</span>
 sudo systemctl start tor
-ssh -o <span class="nv">ProxyCommand</span><span class="o">=</span><span class="s1">&#39;socat STDIO SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
+ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
 </pre></div>
 </div>
 </div>
@@ -284,7 +284,7 @@ ssh -o <span class="nv">ProxyCommand</span><span class="o">=</span><span class="
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 14, 2017, 11:47:06 PM.
+      Last updated on Mar 14, 2017, 11:55:56 PM.
 
     </p>
   </div>
