@@ -111,7 +111,16 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-and-configure-tor">Install and Configure Tor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#verifying">Verifying</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -185,7 +194,67 @@
 
 <div class="section" id="raspberry-pi-watchdog">
 <span id="raspberrypi"></span><h1>Raspberry Pi Watchdog<a class="headerlink" href="#raspberry-pi-watchdog" title="Permalink to this headline">¶</a></h1>
+<p>What if my server hangs or goes down when I&#8217;m not directly using it? All of this monitoring software I&#8217;m setting up
+won&#8217;t notify me when my server is unresponsive. My solution to this problem is a dedicated <a class="reference external" href="https://www.raspberrypi.org/products/">Raspberry Pi</a> with a
+<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">cellular connection</a> on a <a class="reference external" href="https://www.amazon.com/APC-Back-UPS-Battery-Protector-BE425M/dp/B01HDC236Q/">UPS</a>. However these instructions should work on any Linux computer with a network
+connection.</p>
+<div class="section" id="preparing-the-pi">
+<h2>Preparing the Pi<a class="headerlink" href="#preparing-the-pi" title="Permalink to this headline">¶</a></h2>
+<p>This page assumes you&#8217;ve already setup a Raspberry Pi and have cellular (or WiFi) network access. Be sure to configure
+it in such a way that it always connects to the internet after rebooting (not covered here). I followed
+<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a> for my cellular connection. Remember to enable the SSH server on the
+Pi.</p>
+</div>
+<div class="section" id="install-and-configure-tor">
+<h2>Install and Configure Tor<a class="headerlink" href="#install-and-configure-tor" title="Permalink to this headline">¶</a></h2>
+<p>Since my Pi will be on a cellular connection my server won&#8217;t be able to SSH into it (can&#8217;t open ports). I also don&#8217;t
+want my Pi SSHing into my server since if I end up relocating the Pi outside of my home it can get stolen and the crook
+will have SSH access to my server.</p>
+<p>The solution is to put the Raspberry Pi&#8217;s SSH server behind a <a class="reference external" href="https://www.torproject.org/docs/tor-hidden-service.html">Tor hidden service</a>. My server will periodically SSH
+into my Raspberry Pi to collect some metrics (and alert me if the Pi is unavailable) and the Raspberry Pi will have a
+cron job that sends out an email if my server hasn&#8217;t logged in for a while.</p>
+<p>First install Tor:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install tor
+sudo mkdir -m0700 /var/lib/tor/sshd/<span class="p">;</span> sudo chown debian-tor.debian-tor <span class="nv">$_</span>
+</pre></div>
+</div>
+<p>Add this to <code class="docutils literal"><span class="pre">/etc/tor/torrc</span></code>:</p>
+<div class="highlight-apacheconf"><div class="highlight"><pre><span></span><span class="nb">HiddenServiceDir</span> <span class="sx">/var/lib/tor/sshd/</span>
+<span class="nb">HiddenServicePort</span> <span class="m">22</span> <span class="m">127.0.0.1</span>:22
+<span class="nb">HiddenServiceAuthorizeClient</span> stealth Docker
+</pre></div>
+</div>
+<p>Start the service:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo systemctl start tor
+sudo systemctl <span class="nb">enable</span> tor
+sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</span>
+</pre></div>
+</div>
+<p>If you don&#8217;t have a <code class="docutils literal"><span class="pre">hostname</span></code> file in that directory try running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">restart</span> <span class="pre">tor</span></code> and tail
+<code class="docutils literal"><span class="pre">/var/log/tor/log</span></code> for any errors.</p>
+<div class="section" id="verifying">
+<h3>Verifying<a class="headerlink" href="#verifying" title="Permalink to this headline">¶</a></h3>
+<p>If you want to verify SSH is working over cellular and Tor you can install Tor on a client machine (I used a Fedora VM)
+and attempt to SSH in:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf install tor socat
+<span class="c1"># Add this to /etc/tor/torrc:</span>
+<span class="c1"># HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Docker</span>
+sudo systemctl start tor
+ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="hardening-the-pi">
+<h2>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h2>
 <p>TODO</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://gk2.sk/running-ssh-on-a-raspberry-pi-as-a-hidden-service-with-tor/">http://gk2.sk/running-ssh-on-a-raspberry-pi-as-a-hidden-service-with-tor/</a></li>
+</ul>
+</div>
 </div>
 
 
@@ -209,7 +278,7 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 13, 2017, 3:06:50 AM.
+      Last updated on Mar 15, 2017, 2:01:49 AM UTC.
 
     </p>
   </div>
@@ -233,8 +302,8 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="stage/raspberrypi.html">stage</a></dd>
             <dd><a href="master/raspberrypi.html">master</a></dd>
+            <dd><a href="stage/raspberrypi.html">stage</a></dd>
         </dl>
     </div>
 </div>
