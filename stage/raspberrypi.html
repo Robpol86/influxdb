@@ -211,10 +211,17 @@ Pi.</p>
 <div class="section" id="hardening-the-pi">
 <h2>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h2>
 <p>Before exposing the Pi to Tor it&#8217;s a good idea to lock it down.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
+<p>Edit <code class="docutils literal"><span class="pre">/etc/ssh/sshd_config</span></code>:</p>
+<div class="highlight-apacheconf"><div class="highlight"><pre><span></span><span class="nb">PasswordAuthentication</span> no
+<span class="nb">PermitRootLogin</span> no
 </pre></div>
 </div>
-<p>TODO: no root ssh, no password ssh, generate keys.</p>
+<p>Generate SSH keys and run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>
+sudo service ssh restart
+sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
+</pre></div>
+</div>
 </div>
 <div class="section" id="install-and-configure-tor">
 <h2>Install and Configure Tor<a class="headerlink" href="#install-and-configure-tor" title="Permalink to this headline">¶</a></h2>
@@ -285,7 +292,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 15, 2017, 2:58:28 AM UTC.
+      Last updated on Mar 15, 2017, 5:05:23 AM UTC.
 
     </p>
   </div>
