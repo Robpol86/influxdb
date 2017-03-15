@@ -113,11 +113,11 @@
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#install-and-configure-tor">Install and Configure Tor</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#verifying">Verifying</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -208,6 +208,14 @@ it in such a way that it always connects to the internet after rebooting (not co
 <a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a> for my cellular connection. Remember to enable the SSH server on the
 Pi.</p>
 </div>
+<div class="section" id="hardening-the-pi">
+<h2>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h2>
+<p>Before exposing the Pi to Tor it&#8217;s a good idea to lock it down.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
+</pre></div>
+</div>
+<p>TODO: no root ssh, no password ssh, generate keys.</p>
+</div>
 <div class="section" id="install-and-configure-tor">
 <h2>Install and Configure Tor<a class="headerlink" href="#install-and-configure-tor" title="Permalink to this headline">¶</a></h2>
 <p>Since my Pi will be on a cellular connection my server won&#8217;t be able to SSH into it (can&#8217;t open ports). I also don&#8217;t
@@ -248,13 +256,6 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
 </div>
 </div>
 </div>
-<div class="section" id="hardening-the-pi">
-<h2>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>sudo</li>
-<li>no root ssh, no password ssh, generate keys.</li>
-</ul>
-</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -284,7 +285,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 14, 2017, 11:55:56 PM UTC.
+      Last updated on Mar 15, 2017, 2:58:28 AM UTC.
 
     </p>
   </div>
@@ -308,8 +309,8 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../master/raspberrypi.html">master</a></dd>
             <dd><a href="raspberrypi.html">stage</a></dd>
+            <dd><a href="../master/raspberrypi.html">master</a></dd>
         </dl>
     </div>
 </div>
