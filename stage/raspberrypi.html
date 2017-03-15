@@ -113,6 +113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-telegraf">Configure Telegraf</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#install-and-configure-tor">Install and Configure Tor</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#verifying">Verifying</a></li>
@@ -205,8 +206,21 @@ connection.</p>
 <h2>Preparing the Pi<a class="headerlink" href="#preparing-the-pi" title="Permalink to this headline">¶</a></h2>
 <p>This page assumes you&#8217;ve already setup a Raspberry Pi and have cellular (or WiFi) network access. Be sure to configure
 it in such a way that it always connects to the internet after rebooting (not covered here). I followed
-<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a> for my cellular connection. Remember to enable the SSH server on the
-Pi.</p>
+<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a> for my cellular connection. Remember to <strong>enable the SSH server</strong> on
+the Pi.</p>
+</div>
+<div class="section" id="configure-telegraf">
+<h2>Configure Telegraf<a class="headerlink" href="#configure-telegraf" title="Permalink to this headline">¶</a></h2>
+<p>My server will SSH into the Raspberry Pi and manually run Telegraf with an SSH tunnel opened back to my InfluxDB
+database. For this to work I need to setup Telegraf on the Pi but not have the daemon run.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo tee /etc/apt/sources.list.d/influx.list <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;deb https://repos.influxdata.com/debian jessie stable&#39;</span>
+curl -sL https://repos.influxdata.com/influxdb.key <span class="p">|</span>sudo apt-key add -
+sudo apt-get update
+sudo apt-get install telegraf
+sudo systemctl disable telegraf.service
+</pre></div>
+</div>
+<p>TODO</p>
 </div>
 <div class="section" id="hardening-the-pi">
 <h2>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h2>
@@ -292,7 +306,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 15, 2017, 5:05:23 AM UTC.
+      Last updated on Mar 15, 2017, 8:57:34 PM UTC.
 
     </p>
   </div>
