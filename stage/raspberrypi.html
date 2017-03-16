@@ -220,6 +220,9 @@ sudo apt-get install telegraf
 sudo systemctl disable telegraf.service
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
+<span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.py
+curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/cpu_temp
+chmod +x /usr/local/bin/cpu_temp
 telegraf -test
 </pre></div>
 </div>
@@ -314,7 +317,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 16, 2017, 8:22:56 AM UTC.
+      Last updated on Mar 16, 2017, 8:17:56 PM UTC.
 
     </p>
   </div>
@@ -338,8 +341,8 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../master/raspberrypi.html">master</a></dd>
             <dd><a href="raspberrypi.html">stage</a></dd>
+            <dd><a href="../master/raspberrypi.html">master</a></dd>
         </dl>
     </div>
 </div>
