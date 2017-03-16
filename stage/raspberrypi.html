@@ -236,7 +236,7 @@ telegraf -test
 <span class="nb">PermitRootLogin</span> no
 </pre></div>
 </div>
-<p>Generate SSH keys and run:</p>
+<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance) and run:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>
 sudo service ssh restart
 sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
@@ -317,7 +317,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 16, 2017, 9:54:25 PM UTC.
+      Last updated on Mar 16, 2017, 9:59:12 PM UTC.
 
     </p>
   </div>
