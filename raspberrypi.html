@@ -112,12 +112,16 @@
 <li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configure-telegraf">Configure Telegraf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-cellular-modem">Configure Cellular Modem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#install-and-configure-tor">Install and Configure Tor</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#verifying">Verifying</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -197,13 +201,46 @@
 <p>What if my server hangs or goes down when I&#8217;m not directly using it? All of this monitoring software I&#8217;m setting up
 won&#8217;t notify me when my server is unresponsive. My solution to this problem is a dedicated <a class="reference external" href="https://www.raspberrypi.org/products/">Raspberry Pi</a> with a
 <a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">cellular connection</a> on a <a class="reference external" href="https://www.amazon.com/APC-Back-UPS-Battery-Protector-BE425M/dp/B01HDC236Q/">UPS</a>. However these instructions should work on any Linux computer with a network
-connection.</p>
+connection of any type.</p>
 <div class="section" id="preparing-the-pi">
 <h2>Preparing the Pi<a class="headerlink" href="#preparing-the-pi" title="Permalink to this headline">¶</a></h2>
-<p>This page assumes you&#8217;ve already setup a Raspberry Pi and have cellular (or WiFi) network access. Be sure to configure
-it in such a way that it always connects to the internet after rebooting (not covered here). I followed
-<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a> for my cellular connection. Remember to enable the SSH server on the
-Pi.</p>
+<p>Before setting up the cellular modem (we don&#8217;t want these apt-get commands run over cellular which is very slow) I&#8217;ll
+install required software and configure the system. I&#8217;m running these commands on a <a class="reference external" href="https://gist.github.com/Robpol86/3d4730818816f866452e">newly installed</a> Raspbian system.</p>
+<div class="section" id="configure-telegraf">
+<h3>Configure Telegraf<a class="headerlink" href="#configure-telegraf" title="Permalink to this headline">¶</a></h3>
+<p>My server will SSH into the Raspberry Pi and manually run Telegraf with an SSH tunnel opened back to my InfluxDB
+database. For this to work I need to setup Telegraf on the Pi but not have the daemon run.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo tee /etc/apt/sources.list.d/influx.list <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;deb https://repos.influxdata.com/debian jessie stable&#39;</span>
+curl -sL https://repos.influxdata.com/influxdb.key <span class="p">|</span>sudo apt-key add -
+sudo apt-get update
+sudo apt-get install telegraf
+sudo systemctl disable telegraf.service
+<span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
+curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
+telegraf -test
+</pre></div>
+</div>
+<p>If the final test command works you&#8217;re set.</p>
+</div>
+<div class="section" id="hardening-the-pi">
+<h3>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h3>
+<p>Before exposing the Pi to Tor it&#8217;s a good idea to lock it down. Remember to <strong>enable the SSH server</strong> on the Pi. Edit
+<code class="docutils literal"><span class="pre">/etc/ssh/sshd_config</span></code>:</p>
+<div class="highlight-apacheconf"><div class="highlight"><pre><span></span><span class="nb">PasswordAuthentication</span> no
+<span class="nb">PermitRootLogin</span> no
+</pre></div>
+</div>
+<p>Generate SSH keys and run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>
+sudo service ssh restart
+sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="configure-cellular-modem">
+<h2>Configure Cellular Modem<a class="headerlink" href="#configure-cellular-modem" title="Permalink to this headline">¶</a></h2>
+<p>I then setup my modem following this guide: <a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a></p>
 </div>
 <div class="section" id="install-and-configure-tor">
 <h2>Install and Configure Tor<a class="headerlink" href="#install-and-configure-tor" title="Permalink to this headline">¶</a></h2>
@@ -245,10 +282,6 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
 </div>
 </div>
 </div>
-<div class="section" id="hardening-the-pi">
-<h2>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h2>
-<p>TODO</p>
-</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -278,7 +311,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 15, 2017, 2:01:49 AM UTC.
+      Last updated on Mar 16, 2017, 8:28:21 AM UTC.
 
     </p>
   </div>
@@ -302,8 +335,8 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="stage/raspberrypi.html">stage</a></dd>
             <dd><a href="master/raspberrypi.html">master</a></dd>
+            <dd><a href="stage/raspberrypi.html">stage</a></dd>
         </dl>
     </div>
 </div>
