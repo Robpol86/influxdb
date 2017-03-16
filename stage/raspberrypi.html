@@ -222,7 +222,7 @@ sudo systemctl disable telegraf.service
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.py
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/cpu_temp
-chmod +x /usr/local/bin/cpu_temp
+sudo chmod +x /usr/local/bin/cpu_temp
 telegraf -test
 </pre></div>
 </div>
@@ -317,7 +317,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 16, 2017, 8:17:56 PM UTC.
+      Last updated on Mar 16, 2017, 8:31:03 PM UTC.
 
     </p>
   </div>
