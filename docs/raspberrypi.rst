@@ -7,7 +7,7 @@ Raspberry Pi Watchdog
 What if my server hangs or goes down when I'm not directly using it? All of this monitoring software I'm setting up
 won't notify me when my server is unresponsive. My solution to this problem is a dedicated `Raspberry Pi`_ with a
 `cellular connection`_ on a `UPS`_. However these instructions should work on any Linux computer with a network
-connection.
+connection of any type.
 
 .. _Raspberry Pi: https://www.raspberrypi.org/products/
 .. _cellular connection: https://robpol86.com/raspberry_pi_project_fi.html
@@ -16,10 +16,53 @@ connection.
 Preparing the Pi
 ================
 
-This page assumes you've already setup a Raspberry Pi and have cellular (or WiFi) network access. Be sure to configure
-it in such a way that it always connects to the internet after rebooting (not covered here). I followed
-https://robpol86.com/raspberry_pi_project_fi.html for my cellular connection. Remember to enable the SSH server on the
-Pi.
+Before setting up the cellular modem (we don't want these apt-get commands run over cellular which is very slow) I'll
+install required software and configure the system. I'm running these commands on a `newly installed`_ Raspbian system.
+
+.. _newly installed: https://gist.github.com/Robpol86/3d4730818816f866452e
+
+Configure Telegraf
+------------------
+
+My server will SSH into the Raspberry Pi and manually run Telegraf with an SSH tunnel opened back to my InfluxDB
+database. For this to work I need to setup Telegraf on the Pi but not have the daemon run.
+
+.. code-block:: bash
+
+    sudo tee /etc/apt/sources.list.d/influx.list <<< 'deb https://repos.influxdata.com/debian jessie stable'
+    curl -sL https://repos.influxdata.com/influxdb.key |sudo apt-key add -
+    sudo apt-get update
+    sudo apt-get install telegraf
+    sudo systemctl disable telegraf.service
+    url=https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
+    curl -s $url |sudo tee /etc/telegraf/telegraf.conf
+    telegraf -test
+
+If the final test command works you're set.
+
+Hardening the Pi
+----------------
+
+Before exposing the Pi to Tor it's a good idea to lock it down. Remember to **enable the SSH server** on the Pi. Edit
+``/etc/ssh/sshd_config``:
+
+.. code-block:: apacheconf
+
+    PasswordAuthentication no
+    PermitRootLogin no
+
+Generate SSH keys and run:
+
+.. code-block:: bash
+
+    mkdir -m0700 .ssh; (umask 0077; cat >> .ssh/authorized_keys)
+    sudo service ssh restart
+    sudo sed -i 's/NOPASSWD: //g' /etc/sudoers.d/010_pi-nopasswd
+
+Configure Cellular Modem
+========================
+
+I then setup my modem following this guide: https://robpol86.com/raspberry_pi_project_fi.html
 
 Install and Configure Tor
 =========================
@@ -73,11 +116,6 @@ and attempt to SSH in:
     # HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Docker
     sudo systemctl start tor
     ssh -oProxyCommand='socat - SOCKS4A:localhost:%h:%p,socksport=9050' pi@gv3x4yxk7lcizd6q.onion
-
-Hardening the Pi
-================
-
-TODO
 
 References
 ==========

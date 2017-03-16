@@ -20,6 +20,8 @@ InfluxDB
     CREATE DATABASE telegraf
     CREATE USER telegraf_filesrv WITH PASSWORD 'REPLACE_ME'
     GRANT ALL TO telegraf_filesrv
+    CREATE USER telegraf_raspberrypi WITH PASSWORD 'REPLACE_ME'
+    GRANT ALL TO telegraf_raspberrypi
     CREATE USER grafana WITH PASSWORD 'REPLACE_ME'
     GRANT READ ON telegraf TO grafana
 
