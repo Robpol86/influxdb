@@ -36,6 +36,9 @@ database. For this to work I need to setup Telegraf on the Pi but not have the d
     sudo systemctl disable telegraf.service
     url=https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
     curl -s $url |sudo tee /etc/telegraf/telegraf.conf
+    url=https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
+    curl -s $url |sudo tee /usr/local/bin/cpu_temp
+    sudo chmod +x /usr/local/bin/cpu_temp
     telegraf -test
 
 If the final test command works you're set.
@@ -51,7 +54,7 @@ Before exposing the Pi to Tor it's a good idea to lock it down. Remember to **en
     PasswordAuthentication no
     PermitRootLogin no
 
-Generate SSH keys and run:
+Generate SSH keys for the ``pi`` user (for maintenance) and run:
 
 .. code-block:: bash
 
