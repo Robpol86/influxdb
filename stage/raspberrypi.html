@@ -220,9 +220,10 @@ sudo apt-get install telegraf
 sudo systemctl disable telegraf.service
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
+telegraf -test
 </pre></div>
 </div>
-<p>TODO</p>
+<p>If the final test command works you&#8217;re set.</p>
 </div>
 <div class="section" id="hardening-the-pi">
 <h3>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h3>
@@ -313,7 +314,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 15, 2017, 9:30:34 PM UTC.
+      Last updated on Mar 16, 2017, 8:22:56 AM UTC.
 
     </p>
   </div>
