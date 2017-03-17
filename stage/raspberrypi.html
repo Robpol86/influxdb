@@ -274,39 +274,40 @@ sudo mkdir -m0700 /var/lib/tor/sshd/<span class="p">;</span> sudo chown debian-t
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo systemctl start tor
 sudo systemctl <span class="nb">enable</span> tor
 sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</span>
+ssh-keyscan -t ecdsa-sha2-nistp256 localhost  <span class="c1"># Write down output.</span>
 </pre></div>
 </div>
 <p>If you don&#8217;t have a <code class="docutils literal"><span class="pre">hostname</span></code> file in that directory try running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">restart</span> <span class="pre">tor</span></code> and tail
 <code class="docutils literal"><span class="pre">/var/log/tor/log</span></code> for any errors.</p>
 <div class="section" id="verifying">
 <h3>Verifying<a class="headerlink" href="#verifying" title="Permalink to this headline">¶</a></h3>
-<p>Verify SSH is working over cellular and Tor by installing Tor on a client machine (I used a Fedora VM) and attempt to
-SSH in. You&#8217;ll need to do this to obtain the SSH host key since the docker container won&#8217;t add new ones.</p>
+<p>If you want to verify SSH is working over cellular and Tor you can install Tor on a client machine (I used a Fedora VM)
+and attempt to SSH in:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf install tor socat
 <span class="c1"># Add this to /etc/tor/torrc:</span>
 <span class="c1"># HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Server</span>
 sudo systemctl start tor
 ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
-grep gv3x4yxk7lcizd6q ~/.ssh/known_hosts  <span class="c1"># Write down the output.</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="update-container-config">
 <h2>Update Container Config<a class="headerlink" href="#update-container-config" title="Permalink to this headline">¶</a></h2>
-<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">pimon</span></code> container the onion addresses and SSH key to use. The container should be
-currently running since earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section all containers were started.</p>
+<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">pimon</span></code> container the onion addresses, SSH key, and host key to use. The container
+should be currently running since earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section all containers were started.</p>
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/tor/torrc</code></dt>
-<dd><div class="highlight-text"><div class="highlight"><pre><span></span>HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server
+<code class="descname">/storage/Local/raspberrypi/torrc</code></dt>
+<dd><div class="highlight-bash"><div class="highlight"><pre><span></span>sudo touch /storage/Local/raspberrypi/torrc<span class="p">;</span> sudo chmod <span class="m">0600</span> <span class="nv">$_</span>
+sudo tee <span class="nv">$_</span> <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/ssh/config</code></dt>
+<code class="descname">/storage/Local/raspberrypi/config</code></dt>
 <dd><div class="highlight-text"><div class="highlight"><pre><span></span>Host raspberrypi
   HostName REPLACE_ME.onion
 </pre></div>
@@ -315,7 +316,7 @@ currently running since earlier in the <a class="reference internal" href="insta
 
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/ssh/known_hosts</code></dt>
+<code class="descname">/storage/Local/raspberrypi/known_hosts</code></dt>
 <dd><div class="highlight-text"><div class="highlight"><pre><span></span>gv3x4yxk7lcizd6q.onion ecdsa-sha2-nistp256 AAAAE2...HY0NcRAX37Yk2oie7l8kcY77EhqQ=
 </pre></div>
 </div>
@@ -323,7 +324,7 @@ currently running since earlier in the <a class="reference internal" href="insta
 
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/ssh</code></dt>
+<code class="descname">/storage/Local/raspberrypi/id_rsa</code></dt>
 <dd><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> /storage/Local/raspberrypi/ssh
 sudo ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&quot;</span><span class="nv">$HOSTNAME</span><span class="s2">&quot;</span> -N <span class="s2">&quot;&quot;</span> -f id_rsa
 cat id_rsa.pub  <span class="c1"># Append /home/server/.ssh/authorized_keys on the Pi.</span>
@@ -366,7 +367,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 17, 2017, 8:24:38 PM UTC.
+      Last updated on Mar 17, 2017, 10:45:12 PM UTC.
 
     </p>
   </div>
