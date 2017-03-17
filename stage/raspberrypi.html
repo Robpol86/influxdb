@@ -237,17 +237,12 @@ telegraf -test
 <span class="nb">PermitRootLogin</span> no
 </pre></div>
 </div>
-<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance) and run:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>
+<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance, not for Docker, that&#8217;s later) and run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>  <span class="c1"># Run as pi user.</span>
 sudo service ssh restart
 sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
-</pre></div>
-</div>
-<p>Next is the auto-generated SSH key from the docker container. Earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section the
-Raspberry Pi docker container should have started and generated <code class="docutils literal"><span class="pre">/storage/Local/raspberrypi/ssh/id_rsa.pub</span></code>
-automatically.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
-sudo -i -u server bash -c <span class="s1">&#39;umask 0077; cat &gt;&gt; .ssh/authorized_keys&#39;</span>
+sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
+sudo -i -u server bash -c <span class="s1">&#39;umask 0077; touch .ssh/authorized_keys&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -298,7 +293,8 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
 </div>
 <div class="section" id="update-container-config">
 <h2>Update Container Config<a class="headerlink" href="#update-container-config" title="Permalink to this headline">¶</a></h2>
-<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">influxdb_rpi_tor</span></code> and <code class="docutils literal"><span class="pre">influxdb_raspberrypi_1</span></code> containers the onion addresses to use.</p>
+<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">pimon</span></code> container the onion addresses and SSH key to use. The container should be
+currently running since earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section all containers were started.</p>
 <dl class="describe">
 <dt>
 <code class="descname">/storage/Local/raspberrypi/tor/torrc</code></dt>
@@ -310,14 +306,25 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
 <dl class="describe">
 <dt>
 <code class="descname">/storage/Local/raspberrypi/ssh/config</code></dt>
-<dd><div class="highlight-text"><div class="highlight"><pre><span></span>Hostname gv3x4yxk7lcizd6q.onion
+<dd><div class="highlight-text"><div class="highlight"><pre><span></span>host raspberrypi
+  Hostname gv3x4yxk7lcizd6q.onion
 </pre></div>
 </div>
 </dd></dl>
 
-<p>Then restart the Tor container and look at the logs:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart influxdb_rpi_tor
-sudo docker logs influxdb_raspberrypi_1 --follow
+<dl class="describe">
+<dt>
+<code class="descname">/storage/Local/raspberrypi/ssh</code></dt>
+<dd><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> /storage/Local/raspberrypi/ssh
+sudo ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&quot;</span><span class="nv">$HOSTNAME</span><span class="s2">&quot;</span> -N <span class="s2">&quot;&quot;</span> -f id_rsa
+cat id_rsa.pub  <span class="c1"># Append /home/server/.ssh/authorized_keys on the Pi.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Then restart the <code class="docutils literal"><span class="pre">pimon</span></code> container and look at the logs:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart pimon
+sudo docker logs pimon --follow
 </pre></div>
 </div>
 </div>
@@ -350,7 +357,7 @@ sudo docker logs influxdb_raspberrypi_1 --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 17, 2017, 12:46:23 AM UTC.
+      Last updated on Mar 17, 2017, 7:46:48 PM UTC.
 
     </p>
   </div>
