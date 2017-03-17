@@ -112,7 +112,7 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Telegraf on the Server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-telegraf">Install Telegraf</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tweak-and-verify">Tweak and Verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#getsockopt-connection-refused-fix">getsockopt: Connection Refused Fix</a></li>
@@ -194,8 +194,8 @@
 <span id="telegraf"></span><h1>Telegraf on the Server<a class="headerlink" href="#telegraf-on-the-server" title="Permalink to this headline">¶</a></h1>
 <p>To get some data in InfluxDB we&#8217;ll install Telegraf to collect metrics from the Docker host itself. It&#8217;ll need to run
 outside of Docker in order to collect all available metrics.</p>
-<div class="section" id="install">
-<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="install-telegraf">
+<h2>Install Telegraf<a class="headerlink" href="#install-telegraf" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf install https://dl.influxdata.com/telegraf/releases/telegraf-1.2.1.x86_64.rpm
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf.conf
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
@@ -277,7 +277,7 @@ errors I did the following:</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 13, 2017, 3:35:41 AM UTC.
+      Last updated on Mar 17, 2017, 11:49:55 PM UTC.
 
     </p>
   </div>
@@ -301,8 +301,8 @@ errors I did the following:</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="stage/telegraf.html">stage</a></dd>
             <dd><a href="master/telegraf.html">master</a></dd>
+            <dd><a href="stage/telegraf.html">stage</a></dd>
         </dl>
     </div>
 </div>
