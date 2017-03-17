@@ -309,7 +309,7 @@ sudo tee <span class="nv">$_</span> <span class="o">&lt;&lt;&lt;</span> <span cl
 <dl class="describe">
 <dt>
 <code class="descname">/storage/Local/raspberrypi/id_rsa</code></dt>
-<dd><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> /storage/Local/raspberrypi/ssh
+<dd><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> /storage/Local/raspberrypi
 sudo ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&quot;</span><span class="nv">$HOSTNAME</span><span class="s2">&quot;</span> -N <span class="s2">&quot;&quot;</span> -f id_rsa
 cat id_rsa.pub
 </pre></div>
@@ -330,7 +330,8 @@ cat id_rsa.pub
 <dl class="describe">
 <dt>
 <code class="descname">/storage/Local/raspberrypi/known_hosts</code></dt>
-<dd><p>Use the value from the <code class="docutils literal"><span class="pre">ssh-keyscan</span></code> command run on the Raspberry Pi.</p>
+<dd><p>Use the value from the <code class="docutils literal"><span class="pre">ssh-keyscan</span></code> command run on the Raspberry Pi. <strong>Don&#8217;t forget</strong> to replace <code class="docutils literal"><span class="pre">localhost</span></code>
+with the onion hostname used in the other files.</p>
 <div class="highlight-text"><div class="highlight"><pre><span></span>REPLACE_ME.onion ecdsa-sha2-nistp256 AAAAE2...HY0NcRAX37Yk2oie7l8kcY77EhqQ=
 </pre></div>
 </div>
@@ -371,7 +372,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 17, 2017, 10:49:35 PM UTC.
+      Last updated on Mar 17, 2017, 11:04:49 PM UTC.
 
     </p>
   </div>
