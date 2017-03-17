@@ -7,8 +7,8 @@ Telegraf on the Server
 To get some data in InfluxDB we'll install Telegraf to collect metrics from the Docker host itself. It'll need to run 
 outside of Docker in order to collect all available metrics.
 
-Install
-=======
+Install Telegraf
+================
 
 .. code-block:: bash
 

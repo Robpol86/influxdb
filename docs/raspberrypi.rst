@@ -54,13 +54,15 @@ Before exposing the Pi to Tor it's a good idea to lock it down. Remember to **en
     PasswordAuthentication no
     PermitRootLogin no
 
-Generate SSH keys for the ``pi`` user (for maintenance) and run:
+Generate SSH keys for the ``pi`` user (for maintenance, not for Server, that's later) and run:
 
 .. code-block:: bash
 
-    mkdir -m0700 .ssh; (umask 0077; cat >> .ssh/authorized_keys)
+    mkdir -m0700 .ssh; (umask 0077; cat >> .ssh/authorized_keys)  # Run as pi user.
     sudo service ssh restart
     sudo sed -i 's/NOPASSWD: //g' /etc/sudoers.d/010_pi-nopasswd
+    sudo useradd -mp $(openssl rand -base64 20) server; sudo -i -u $_ mkdir -m0700 .ssh
+    sudo -i -u server bash -c 'umask 0077; touch .ssh/authorized_keys'
 
 Configure Cellular Modem
 ========================
@@ -91,7 +93,7 @@ Add this to ``/etc/tor/torrc``:
 
     HiddenServiceDir /var/lib/tor/sshd/
     HiddenServicePort 22 127.0.0.1:22
-    HiddenServiceAuthorizeClient stealth Docker
+    HiddenServiceAuthorizeClient stealth Server
 
 Start the service:
 
@@ -100,6 +102,7 @@ Start the service:
     sudo systemctl start tor
     sudo systemctl enable tor
     sudo cat /var/lib/tor/sshd/hostname  # Write down the output.
+    ssh-keyscan -t ecdsa-sha2-nistp256 localhost  # Write down output.
 
 If you don't have a ``hostname`` file in that directory try running ``sudo systemctl restart tor`` and tail
 ``/var/log/tor/log`` for any errors.
@@ -116,9 +119,59 @@ and attempt to SSH in:
 
     sudo dnf install tor socat
     # Add this to /etc/tor/torrc:
-    # HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Docker
+    # HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Server
     sudo systemctl start tor
     ssh -oProxyCommand='socat - SOCKS4A:localhost:%h:%p,socksport=9050' pi@gv3x4yxk7lcizd6q.onion
+
+Update Container Config
+=======================
+
+Finally it's time to tell the ``pimon`` container the onion addresses, SSH key, and host key to use. The container
+should be currently running since earlier in the :ref:`Start Containers` section all containers were started.
+
+.. describe:: /storage/Local/raspberrypi/torrc
+
+    Use the output of the ``cat /var/lib/tor/sshd/hostname`` command from the Raspberry Pi.
+
+    .. code-block:: bash
+
+        sudo touch /storage/Local/raspberrypi/torrc; sudo chmod 0600 $_
+        sudo tee $_ <<< 'HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server'
+
+.. describe:: /storage/Local/raspberrypi/id_rsa
+
+    .. code-block:: bash
+
+        cd /storage/Local/raspberrypi
+        sudo ssh-keygen -t rsa -b 4096 -C "$HOSTNAME" -N "" -f id_rsa
+        cat id_rsa.pub
+
+    Append this public key to the ``/home/server/.ssh/authorized_keys`` file on the Raspberry Pi.
+
+.. describe:: /storage/Local/raspberrypi/config
+
+    Use the hostname specified in the output of the ``cat /var/lib/tor/sshd/hostname`` command from the Raspberry Pi.
+
+    .. code-block:: text
+
+        Host raspberrypi
+          HostName REPLACE_ME.onion
+
+.. describe:: /storage/Local/raspberrypi/known_hosts
+
+    Use the value from the ``ssh-keyscan`` command run on the Raspberry Pi. **Don't forget** to replace ``localhost``
+    with the onion hostname used in the other files.
+
+    .. code-block:: text
+
+        REPLACE_ME.onion ecdsa-sha2-nistp256 AAAAE2...HY0NcRAX37Yk2oie7l8kcY77EhqQ=
+
+Then restart the ``pimon`` container and look at the logs:
+
+.. code-block:: bash
+
+    sudo docker restart pimon
+    sudo docker logs pimon --follow
 
 References
 ==========

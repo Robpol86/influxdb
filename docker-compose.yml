@@ -23,3 +23,9 @@ services:
     image: grafana/grafana
     restart: always
     volumes: ['/storage/Local/grafana:/var/lib/grafana']
+
+  pimon:
+    build: ./pimon
+    container_name: pimon
+    restart: always
+    volumes: ['/storage/Local/raspberrypi:/root/copy:ro']

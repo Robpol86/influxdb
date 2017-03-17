@@ -32,6 +32,10 @@ html_theme = 'sphinx_rtd_theme'
 html_title = project
 
 
+# autosectionlabel
+extensions.append('sphinx.ext.autosectionlabel')
+
+
 # google analytics
 extensions.append('sphinxcontrib.googleanalytics')
 googleanalytics_id = 'UA-82627369-1'
