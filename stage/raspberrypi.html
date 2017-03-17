@@ -242,6 +242,13 @@ sudo service ssh restart
 sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
 </pre></div>
 </div>
+<p>Next is the auto-generated SSH key from the docker container. Earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section the
+Raspberry Pi docker container should have started and generated <code class="docutils literal"><span class="pre">/storage/Local/raspberrypi/ssh/id_rsa.pub</span></code>
+automatically.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
+sudo -i -u server bash -c <span class="s1">&#39;umask 0077; cat &gt;&gt; .ssh/authorized_keys&#39;</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="configure-cellular-modem">
@@ -317,7 +324,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 16, 2017, 9:59:12 PM UTC.
+      Last updated on Mar 17, 2017, 12:36:33 AM UTC.
 
     </p>
   </div>
