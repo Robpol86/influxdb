@@ -122,6 +122,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#verifying">Verifying</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#update-container-config">Update Container Config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -271,7 +272,7 @@ sudo mkdir -m0700 /var/lib/tor/sshd/<span class="p">;</span> sudo chown debian-t
 <p>Add this to <code class="docutils literal"><span class="pre">/etc/tor/torrc</span></code>:</p>
 <div class="highlight-apacheconf"><div class="highlight"><pre><span></span><span class="nb">HiddenServiceDir</span> <span class="sx">/var/lib/tor/sshd/</span>
 <span class="nb">HiddenServicePort</span> <span class="m">22</span> <span class="m">127.0.0.1</span>:22
-<span class="nb">HiddenServiceAuthorizeClient</span> stealth Docker
+<span class="nb">HiddenServiceAuthorizeClient</span> stealth Server
 </pre></div>
 </div>
 <p>Start the service:</p>
@@ -288,11 +289,36 @@ sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</
 and attempt to SSH in:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf install tor socat
 <span class="c1"># Add this to /etc/tor/torrc:</span>
-<span class="c1"># HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Docker</span>
+<span class="c1"># HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Server</span>
 sudo systemctl start tor
 ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="update-container-config">
+<h2>Update Container Config<a class="headerlink" href="#update-container-config" title="Permalink to this headline">¶</a></h2>
+<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">influxdb_rpi_tor</span></code> and <code class="docutils literal"><span class="pre">influxdb_raspberrypi_1</span></code> containers the onion addresses to use.</p>
+<dl class="describe">
+<dt>
+<code class="descname">/storage/Local/raspberrypi/tor/torrc</code></dt>
+<dd><div class="highlight-text"><div class="highlight"><pre><span></span>HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Server
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<code class="descname">/storage/Local/raspberrypi/ssh/config</code></dt>
+<dd><div class="highlight-text"><div class="highlight"><pre><span></span>Hostname gv3x4yxk7lcizd6q.onion
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Then restart the Tor container and look at the logs:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart influxdb_rpi_tor
+sudo docker logs influxdb_raspberrypi_1 --follow
+</pre></div>
 </div>
 </div>
 <div class="section" id="references">
@@ -324,7 +350,7 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 17, 2017, 12:36:33 AM UTC.
+      Last updated on Mar 17, 2017, 12:46:23 AM UTC.
 
     </p>
   </div>
