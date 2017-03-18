@@ -24,8 +24,8 @@ install required software and configure the system. I'm running these commands o
 Configure Telegraf
 ------------------
 
-My server will SSH into the Raspberry Pi and manually run Telegraf with an SSH tunnel opened back to my InfluxDB
-database. For this to work I need to setup Telegraf on the Pi but not have the daemon run.
+My server will SSH into the Raspberry Pi with an SSH tunnel opened back to my InfluxDB database. It will try to maintain
+this connection indefinitely. For this to work I need to setup Telegraf on the Pi first.
 
 .. code-block:: bash
 
@@ -33,15 +33,14 @@ database. For this to work I need to setup Telegraf on the Pi but not have the d
     curl -sL https://repos.influxdata.com/influxdb.key |sudo apt-key add -
     sudo apt-get update
     sudo apt-get install telegraf
-    sudo systemctl disable telegraf.service
     url=https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
     curl -s $url |sudo tee /etc/telegraf/telegraf.conf
+    sudo chmod 0600 /etc/telegraf/telegraf.conf; sudo chown telegraf $_
     url=https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
     curl -s $url |sudo tee /usr/local/bin/cpu_temp
     sudo chmod +x /usr/local/bin/cpu_temp
     telegraf -test
-
-If the final test command works you're set.
+    sudo systemctl start telegraf.service
 
 Hardening the Pi
 ----------------
