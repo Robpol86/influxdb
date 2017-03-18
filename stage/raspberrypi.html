@@ -212,22 +212,21 @@ connection of any type.</p>
 install required software and configure the system. I&#8217;m running these commands on a <a class="reference external" href="https://gist.github.com/Robpol86/3d4730818816f866452e">newly installed</a> Raspbian system.</p>
 <div class="section" id="configure-telegraf">
 <h3>Configure Telegraf<a class="headerlink" href="#configure-telegraf" title="Permalink to this headline">¶</a></h3>
-<p>My server will SSH into the Raspberry Pi and manually run Telegraf with an SSH tunnel opened back to my InfluxDB
-database. For this to work I need to setup Telegraf on the Pi but not have the daemon run.</p>
+<p>My server will SSH into the Raspberry Pi with an SSH tunnel opened back to my InfluxDB database. It will try to maintain
+this connection indefinitely. For this to work I need to setup Telegraf on the Pi first.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo tee /etc/apt/sources.list.d/influx.list <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;deb https://repos.influxdata.com/debian jessie stable&#39;</span>
 curl -sL https://repos.influxdata.com/influxdb.key <span class="p">|</span>sudo apt-key add -
 sudo apt-get update
 sudo apt-get install telegraf
-sudo systemctl disable telegraf.service
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/cpu_temp
 sudo chmod +x /usr/local/bin/cpu_temp
 telegraf -test
+sudo systemctl start telegraf.service
 </pre></div>
 </div>
-<p>If the final test command works you&#8217;re set.</p>
 </div>
 <div class="section" id="hardening-the-pi">
 <h3>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h3>
@@ -237,7 +236,7 @@ telegraf -test
 <span class="nb">PermitRootLogin</span> no
 </pre></div>
 </div>
-<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance, not for Docker, that&#8217;s later) and run:</p>
+<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance, not for Server, that&#8217;s later) and run:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>  <span class="c1"># Run as pi user.</span>
 sudo service ssh restart
 sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
@@ -372,7 +371,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 17, 2017, 11:04:49 PM UTC.
+      Last updated on Mar 18, 2017, 12:04:40 AM UTC.
 
     </p>
   </div>
@@ -396,8 +395,8 @@ sudo docker logs pimon --follow
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../master/raspberrypi.html">master</a></dd>
             <dd><a href="raspberrypi.html">stage</a></dd>
+            <dd><a href="../master/raspberrypi.html">master</a></dd>
         </dl>
     </div>
 </div>
