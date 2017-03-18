@@ -220,6 +220,7 @@ sudo apt-get update
 sudo apt-get install telegraf
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
+sudo chmod <span class="m">0600</span> /etc/telegraf/telegraf.conf<span class="p">;</span> sudo chown telegraf <span class="nv">$_</span>
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/cpu_temp
 sudo chmod +x /usr/local/bin/cpu_temp
@@ -371,7 +372,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 18, 2017, 12:04:40 AM UTC.
+      Last updated on Mar 18, 2017, 12:37:29 AM UTC.
 
     </p>
   </div>
