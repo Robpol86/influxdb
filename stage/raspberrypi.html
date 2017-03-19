@@ -282,11 +282,12 @@ sudo cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf
 </pre></div>
 </div>
 <p>Then run:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo tee /etc/aliases <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;root: &lt;YOU&gt;@gmail.com&#39;</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="k">for</span> u in pi root server<span class="p">;</span> <span class="k">do</span> sudo tee -a /etc/aliases <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;</span><span class="nv">$u</span><span class="s2">: &lt;YOU&gt;@gmail.com&quot;</span><span class="p">;</span> <span class="k">done</span>
 sudo newaliases
 sudo systemctl start postfix.service
 sudo systemctl <span class="nb">enable</span> postfix.service
 mail -s <span class="s2">&quot;Test Email </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> &lt;YOU&gt;@gmail.com <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email for Pi </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> pi <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
 mail -s <span class="s2">&quot;Test Email for Root </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> root <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
 mail -s <span class="s2">&quot;Test Email for Server </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> server <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
 </pre></div>
@@ -432,7 +433,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 19, 2017, 9:17:39 PM UTC.
+      Last updated on Mar 19, 2017, 9:22:26 PM UTC.
 
     </p>
   </div>
