@@ -17,15 +17,18 @@ Preparing the Pi
 ================
 
 Before setting up the cellular modem (we don't want these apt-get commands run over cellular which is very slow) I'll
-install required software and configure the system. I'm running these commands on a `newly installed`_ Raspbian system.
+install required software and configure the system.
+
+1. Setup a `newly installed`_ Raspbian system.
+2. Don't forget to change hostname.
 
 .. _newly installed: https://gist.github.com/Robpol86/3d4730818816f866452e
 
-Configure Telegraf
-------------------
+Install Software
+----------------
 
 My server will SSH into the Raspberry Pi with an SSH tunnel opened back to my InfluxDB database. It will try to maintain
-this connection indefinitely. For this to work I need to setup Telegraf on the Pi first.
+this connection indefinitely. For this to work I first need to setup Telegraf and other files on the Pi.
 
 .. code-block:: bash
 
@@ -38,7 +41,9 @@ this connection indefinitely. For this to work I need to setup Telegraf on the P
     sudo chmod 0600 /etc/telegraf/telegraf.conf; sudo chown telegraf $_
     url=https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
     curl -s $url |sudo tee /usr/local/bin/cpu_temp
-    sudo chmod +x /usr/local/bin/cpu_temp
+    url=https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/mia.sh
+    curl -s $url |sudo tee /usr/local/bin/mia
+    sudo chmod +x /usr/local/bin/{cpu_temp,mia}
     telegraf -test
     sudo systemctl start telegraf.service
 
@@ -62,6 +67,67 @@ Generate SSH keys for the ``pi`` user (for maintenance, not for Server, that's l
     sudo sed -i 's/NOPASSWD: //g' /etc/sudoers.d/010_pi-nopasswd
     sudo useradd -mp $(openssl rand -base64 20) server; sudo -i -u $_ mkdir -m0700 .ssh
     sudo -i -u server bash -c 'umask 0077; touch .ssh/authorized_keys'
+
+Enable SSH PAM Logging
+----------------------
+
+Sessions from SSH that are just commands being ran without an interactive session do not get logged to `wtmp`_. I want
+to enable this to determine if my server hasn't SSHed in for a while (e.g. it's down).
+
+Append the following line to the bottom of ``/etc/pam.d/sshd``:
+
+.. code-block:: text
+
+    session required pam_lastlog.so silent
+
+Then **reboot**.
+
+.. _wtmp: https://en.wikipedia.org/wiki/wtmp
+
+Setup Email
+-----------
+
+.. code-block:: bash
+
+    sudo apt-get install postfix bsd-mailx
+    sudo cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf
+
+Then edit ``/etc/postfix/main.cf`` with the following. Replace ``$API_KEY`` and ``$SENDING_DOMAIN``.
+
+.. code-block:: ini
+
+    smtp_sasl_auth_enable = yes
+    smtp_sasl_password_maps = static:SMTP_Injection:$API_KEY
+    relayhost = [smtp.sparkpostmail.com]:587
+    smtp_sasl_security_options = noanonymous
+    smtp_tls_security_level = encrypt
+    header_size_limit = 4096000
+    myorigin = $SENDING_DOMAIN.com
+    mydestination = $SENDING_DOMAIN.com $myhostname localhost.$mydomain localhost
+
+Then run:
+
+.. code-block:: bash
+
+    for u in pi root server; do sudo tee -a /etc/aliases <<< "$u: $YOU@gmail.com"; done
+    sudo newaliases
+    sudo systemctl start postfix.service
+    sudo systemctl enable postfix.service
+    mail -s "Test Email $(date)" $YOU@gmail.com <<< "This is a test email."
+    mail -s "Test Email for Pi $(date)" pi <<< "This is a test email."
+    mail -s "Test Email for Root $(date)" root <<< "This is a test email."
+    mail -s "Test Email for Server $(date)" server <<< "This is a test email."
+
+You should receive three emails in your personal email account. If not make sure the numbers in your SparkPost's
+dashboard's usage report have increased.
+
+Add these to the **root** crontab. The email configuration from above will take care of forwarding root emails to my
+real email address.
+
+.. code-block:: bash
+
+    @hourly journalctl --since="1 hour ago" --priority=err --quiet
+    */10 * * * * /usr/local/bin/mia server 5
 
 Configure Cellular Modem
 ========================
@@ -111,15 +177,21 @@ If you don't have a ``hostname`` file in that directory try running ``sudo syste
 Verifying
 ---------
 
-If you want to verify SSH is working over cellular and Tor you can install Tor on a client machine (I used a Fedora VM)
-and attempt to SSH in:
+If you want to verify SSH is working over cellular and Tor you can install Tor on your client machine and attempt to SSH
+in:
 
 .. code-block:: bash
 
+    # Fedora:
     sudo dnf install tor socat
     # Add this to /etc/tor/torrc:
-    # HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Server
+    sudo tee /etc/tor/torrc <<< "HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB"
     sudo systemctl start tor
+    ssh -oProxyCommand='socat - SOCKS4A:localhost:%h:%p,socksport=9050' pi@gv3x4yxk7lcizd6q.onion
+    # OS X:
+    brew install tor socat
+    echo 'HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB' > /usr/local/etc/tor/torrc
+    tor &
     ssh -oProxyCommand='socat - SOCKS4A:localhost:%h:%p,socksport=9050' pi@gv3x4yxk7lcizd6q.onion
 
 Update Container Config
