@@ -305,12 +305,18 @@ ssh-keyscan -t ecdsa-sha2-nistp256 localhost  <span class="c1"># Write down outp
 <code class="docutils literal"><span class="pre">/var/log/tor/log</span></code> for any errors.</p>
 <div class="section" id="verifying">
 <h3>Verifying<a class="headerlink" href="#verifying" title="Permalink to this headline">¶</a></h3>
-<p>If you want to verify SSH is working over cellular and Tor you can install Tor on a client machine (I used a Fedora VM)
-and attempt to SSH in:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf install tor socat
+<p>If you want to verify SSH is working over cellular and Tor you can install Tor on your client machine and attempt to SSH
+in:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Fedora:</span>
+sudo dnf install tor socat
 <span class="c1"># Add this to /etc/tor/torrc:</span>
-<span class="c1"># HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Server</span>
+sudo tee /etc/tor/torrc <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB&quot;</span>
 sudo systemctl start tor
+ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
+<span class="c1"># OS X:</span>
+brew install tor socat
+<span class="nb">echo</span> <span class="s1">&#39;HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB&#39;</span> &gt; /usr/local/etc/tor/torrc
+tor <span class="p">&amp;</span>
 ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
 </pre></div>
 </div>
@@ -396,7 +402,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 19, 2017, 7:34:27 AM UTC.
+      Last updated on Mar 19, 2017, 6:58:47 PM UTC.
 
     </p>
   </div>
