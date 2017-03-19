@@ -266,8 +266,8 @@ to enable this to determine if my server hasn&#8217;t SSHed in for a while (e.g.
 </div>
 <div class="section" id="setup-email">
 <h3>Setup Email<a class="headerlink" href="#setup-email" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install postfix mailutils
-<span class="k">for</span> u in pi server root<span class="p">;</span> <span class="k">do</span> sudo touch /var/mail/<span class="nv">$u</span><span class="p">;</span> sudo chown <span class="nv">$u</span>:mail <span class="nv">$_</span><span class="p">;</span> sudo chmod <span class="m">660</span> <span class="nv">$_</span><span class="p">;</span> <span class="k">done</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install postfix bsd-mailx
+sudo cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf
 </pre></div>
 </div>
 <p>Then edit <code class="docutils literal"><span class="pre">/etc/postfix/main.cf</span></code> with the following. Replace <code class="docutils literal"><span class="pre">&lt;API-KEY&gt;</span></code> and <code class="docutils literal"><span class="pre">&lt;SENDING-DOMAIN&gt;</span></code>.</p>
@@ -432,7 +432,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 19, 2017, 9:06:22 PM UTC.
+      Last updated on Mar 19, 2017, 9:17:39 PM UTC.
 
     </p>
   </div>
