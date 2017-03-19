@@ -270,23 +270,23 @@ to enable this to determine if my server hasn&#8217;t SSHed in for a while (e.g.
 sudo cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf
 </pre></div>
 </div>
-<p>Then edit <code class="docutils literal"><span class="pre">/etc/postfix/main.cf</span></code> with the following. Replace <code class="docutils literal"><span class="pre">&lt;API-KEY&gt;</span></code> and <code class="docutils literal"><span class="pre">&lt;SENDING-DOMAIN&gt;</span></code>.</p>
+<p>Then edit <code class="docutils literal"><span class="pre">/etc/postfix/main.cf</span></code> with the following. Replace <code class="docutils literal"><span class="pre">$API_KEY</span></code> and <code class="docutils literal"><span class="pre">$SENDING_DOMAIN</span></code>.</p>
 <div class="highlight-ini"><div class="highlight"><pre><span></span><span class="na">smtp_sasl_auth_enable</span> <span class="o">=</span> <span class="s">yes</span>
-<span class="na">smtp_sasl_password_maps</span> <span class="o">=</span> <span class="s">static:SMTP_Injection:&lt;API-KEY&gt;</span>
+<span class="na">smtp_sasl_password_maps</span> <span class="o">=</span> <span class="s">static:SMTP_Injection:$API_KEY</span>
 <span class="na">relayhost</span> <span class="o">=</span> <span class="s">[smtp.sparkpostmail.com]:587</span>
 <span class="na">smtp_sasl_security_options</span> <span class="o">=</span> <span class="s">noanonymous</span>
 <span class="na">smtp_tls_security_level</span> <span class="o">=</span> <span class="s">encrypt</span>
 <span class="na">header_size_limit</span> <span class="o">=</span> <span class="s">4096000</span>
-<span class="na">myorigin</span> <span class="o">=</span> <span class="s">&lt;SENDING-DOMAIN&gt;.com</span>
-<span class="na">mydestination</span> <span class="o">=</span> <span class="s">&lt;SENDING-DOMAIN&gt;.com $myhostname localhost.$mydomain localhost</span>
+<span class="na">myorigin</span> <span class="o">=</span> <span class="s">$SENDING_DOMAIN.com</span>
+<span class="na">mydestination</span> <span class="o">=</span> <span class="s">$SENDING_DOMAIN.com $myhostname localhost.$mydomain localhost</span>
 </pre></div>
 </div>
 <p>Then run:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="k">for</span> u in pi root server<span class="p">;</span> <span class="k">do</span> sudo tee -a /etc/aliases <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;</span><span class="nv">$u</span><span class="s2">: &lt;YOU&gt;@gmail.com&quot;</span><span class="p">;</span> <span class="k">done</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="k">for</span> u in pi root server<span class="p">;</span> <span class="k">do</span> sudo tee -a /etc/aliases <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;</span><span class="nv">$u</span><span class="s2">: </span><span class="nv">$YOU</span><span class="s2">@gmail.com&quot;</span><span class="p">;</span> <span class="k">done</span>
 sudo newaliases
 sudo systemctl start postfix.service
 sudo systemctl <span class="nb">enable</span> postfix.service
-mail -s <span class="s2">&quot;Test Email </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> &lt;YOU&gt;@gmail.com <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> <span class="nv">$YOU</span>@gmail.com <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
 mail -s <span class="s2">&quot;Test Email for Pi </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> pi <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
 mail -s <span class="s2">&quot;Test Email for Root </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> root <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
 mail -s <span class="s2">&quot;Test Email for Server </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> server <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
@@ -433,7 +433,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 19, 2017, 9:22:26 PM UTC.
+      Last updated on Mar 19, 2017, 10:04:16 PM UTC.
 
     </p>
   </div>
