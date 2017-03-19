@@ -113,8 +113,10 @@
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configure-telegraf">Configure Telegraf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-software">Install Software</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enable-ssh-pam-logging">Enable SSH PAM Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-email">Setup Email</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#configure-cellular-modem">Configure Cellular Modem</a></li>
@@ -206,11 +208,15 @@ connection of any type.</p>
 <div class="section" id="preparing-the-pi">
 <h2>Preparing the Pi<a class="headerlink" href="#preparing-the-pi" title="Permalink to this headline">¶</a></h2>
 <p>Before setting up the cellular modem (we don&#8217;t want these apt-get commands run over cellular which is very slow) I&#8217;ll
-install required software and configure the system. I&#8217;m running these commands on a <a class="reference external" href="https://gist.github.com/Robpol86/3d4730818816f866452e">newly installed</a> Raspbian system.</p>
-<div class="section" id="configure-telegraf">
-<h3>Configure Telegraf<a class="headerlink" href="#configure-telegraf" title="Permalink to this headline">¶</a></h3>
+install required software and configure the system.</p>
+<ol class="arabic simple">
+<li>Setup a <a class="reference external" href="https://gist.github.com/Robpol86/3d4730818816f866452e">newly installed</a> Raspbian system.</li>
+<li>Don&#8217;t forget to change hostname.</li>
+</ol>
+<div class="section" id="install-software">
+<h3>Install Software<a class="headerlink" href="#install-software" title="Permalink to this headline">¶</a></h3>
 <p>My server will SSH into the Raspberry Pi with an SSH tunnel opened back to my InfluxDB database. It will try to maintain
-this connection indefinitely. For this to work I need to setup Telegraf on the Pi first.</p>
+this connection indefinitely. For this to work I first need to setup Telegraf and other files on the Pi.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo tee /etc/apt/sources.list.d/influx.list <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;deb https://repos.influxdata.com/debian jessie stable&#39;</span>
 curl -sL https://repos.influxdata.com/influxdb.key <span class="p">|</span>sudo apt-key add -
 sudo apt-get update
@@ -220,7 +226,9 @@ curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/teleg
 sudo chmod <span class="m">0600</span> /etc/telegraf/telegraf.conf<span class="p">;</span> sudo chown telegraf <span class="nv">$_</span>
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/cpu_temp
-sudo chmod +x /usr/local/bin/cpu_temp
+<span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/mia.sh
+curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/mia
+sudo chmod +x /usr/local/bin/<span class="o">{</span>cpu_temp,mia<span class="o">}</span>
 telegraf -test
 sudo systemctl start telegraf.service
 </pre></div>
@@ -240,6 +248,53 @@ sudo service ssh restart
 sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
 sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
 sudo -i -u server bash -c <span class="s1">&#39;umask 0077; touch .ssh/authorized_keys&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="enable-ssh-pam-logging">
+<h3>Enable SSH PAM Logging<a class="headerlink" href="#enable-ssh-pam-logging" title="Permalink to this headline">¶</a></h3>
+<p>Sessions from SSH that are just commands being ran without an interactive session do not get logged to <a class="reference external" href="https://en.wikipedia.org/wiki/wtmp">wtmp</a>. I want
+to enable this to determine if my server hasn&#8217;t SSHed in for a while (e.g. it&#8217;s down).</p>
+<p>Append the following line to the bottom of <code class="docutils literal"><span class="pre">/etc/pam.d/sshd</span></code>:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>session required pam_lastlog.so silent
+</pre></div>
+</div>
+<p>Then <strong>reboot</strong>.</p>
+</div>
+<div class="section" id="setup-email">
+<h3>Setup Email<a class="headerlink" href="#setup-email" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install postfix bsd-mailx
+sudo cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf
+</pre></div>
+</div>
+<p>Then edit <code class="docutils literal"><span class="pre">/etc/postfix/main.cf</span></code> with the following. Replace <code class="docutils literal"><span class="pre">$API_KEY</span></code> and <code class="docutils literal"><span class="pre">$SENDING_DOMAIN</span></code>.</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="na">smtp_sasl_auth_enable</span> <span class="o">=</span> <span class="s">yes</span>
+<span class="na">smtp_sasl_password_maps</span> <span class="o">=</span> <span class="s">static:SMTP_Injection:$API_KEY</span>
+<span class="na">relayhost</span> <span class="o">=</span> <span class="s">[smtp.sparkpostmail.com]:587</span>
+<span class="na">smtp_sasl_security_options</span> <span class="o">=</span> <span class="s">noanonymous</span>
+<span class="na">smtp_tls_security_level</span> <span class="o">=</span> <span class="s">encrypt</span>
+<span class="na">header_size_limit</span> <span class="o">=</span> <span class="s">4096000</span>
+<span class="na">myorigin</span> <span class="o">=</span> <span class="s">$SENDING_DOMAIN.com</span>
+<span class="na">mydestination</span> <span class="o">=</span> <span class="s">$SENDING_DOMAIN.com $myhostname localhost.$mydomain localhost</span>
+</pre></div>
+</div>
+<p>Then run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="k">for</span> u in pi root server<span class="p">;</span> <span class="k">do</span> sudo tee -a /etc/aliases <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;</span><span class="nv">$u</span><span class="s2">: </span><span class="nv">$YOU</span><span class="s2">@gmail.com&quot;</span><span class="p">;</span> <span class="k">done</span>
+sudo newaliases
+sudo systemctl start postfix.service
+sudo systemctl <span class="nb">enable</span> postfix.service
+mail -s <span class="s2">&quot;Test Email </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> <span class="nv">$YOU</span>@gmail.com <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email for Pi </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> pi <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email for Root </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> root <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email for Server </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> server <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+</pre></div>
+</div>
+<p>You should receive three emails in your personal email account. If not make sure the numbers in your SparkPost&#8217;s
+dashboard&#8217;s usage report have increased.</p>
+<p>Add these to the <strong>root</strong> crontab. The email configuration from above will take care of forwarding root emails to my
+real email address.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>@hourly journalctl --since<span class="o">=</span><span class="s2">&quot;1 hour ago&quot;</span> --priority<span class="o">=</span>err --quiet
+*/10 * * * * /usr/local/bin/mia server <span class="m">5</span>
 </pre></div>
 </div>
 </div>
@@ -278,12 +333,18 @@ ssh-keyscan -t ecdsa-sha2-nistp256 localhost  <span class="c1"># Write down outp
 <code class="docutils literal"><span class="pre">/var/log/tor/log</span></code> for any errors.</p>
 <div class="section" id="verifying">
 <h3>Verifying<a class="headerlink" href="#verifying" title="Permalink to this headline">¶</a></h3>
-<p>If you want to verify SSH is working over cellular and Tor you can install Tor on a client machine (I used a Fedora VM)
-and attempt to SSH in:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf install tor socat
+<p>If you want to verify SSH is working over cellular and Tor you can install Tor on your client machine and attempt to SSH
+in:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Fedora:</span>
+sudo dnf install tor socat
 <span class="c1"># Add this to /etc/tor/torrc:</span>
-<span class="c1"># HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB # client: Server</span>
+sudo tee /etc/tor/torrc <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB&quot;</span>
 sudo systemctl start tor
+ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
+<span class="c1"># OS X:</span>
+brew install tor socat
+<span class="nb">echo</span> <span class="s1">&#39;HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB&#39;</span> &gt; /usr/local/etc/tor/torrc
+tor <span class="p">&amp;</span>
 ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
 </pre></div>
 </div>
@@ -369,7 +430,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 18, 2017, 12:57:28 AM UTC.
+      Last updated on Mar 19, 2017, 11:10:28 PM UTC.
 
     </p>
   </div>
@@ -393,8 +454,8 @@ sudo docker logs pimon --follow
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../stage/raspberrypi.html">stage</a></dd>
             <dd><a href="raspberrypi.html">master</a></dd>
+            <dd><a href="../stage/raspberrypi.html">stage</a></dd>
         </dl>
     </div>
 </div>
