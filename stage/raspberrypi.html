@@ -113,9 +113,10 @@
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configure-telegraf">Configure Telegraf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-software">Install Software</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#enable-ssh-pam-logging">Enable SSH PAM Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-email">Setup Email</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#configure-cellular-modem">Configure Cellular Modem</a></li>
@@ -211,10 +212,10 @@ connection of any type.</p>
 <h2>Preparing the Pi<a class="headerlink" href="#preparing-the-pi" title="Permalink to this headline">¶</a></h2>
 <p>Before setting up the cellular modem (we don&#8217;t want these apt-get commands run over cellular which is very slow) I&#8217;ll
 install required software and configure the system. I&#8217;m running these commands on a <a class="reference external" href="https://gist.github.com/Robpol86/3d4730818816f866452e">newly installed</a> Raspbian system.</p>
-<div class="section" id="configure-telegraf">
-<h3>Configure Telegraf<a class="headerlink" href="#configure-telegraf" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="install-software">
+<h3>Install Software<a class="headerlink" href="#install-software" title="Permalink to this headline">¶</a></h3>
 <p>My server will SSH into the Raspberry Pi with an SSH tunnel opened back to my InfluxDB database. It will try to maintain
-this connection indefinitely. For this to work I need to setup Telegraf on the Pi first.</p>
+this connection indefinitely. For this to work I first need to setup Telegraf and other files on the Pi.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo tee /etc/apt/sources.list.d/influx.list <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;deb https://repos.influxdata.com/debian jessie stable&#39;</span>
 curl -sL https://repos.influxdata.com/influxdb.key <span class="p">|</span>sudo apt-key add -
 sudo apt-get update
@@ -224,7 +225,9 @@ curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/teleg
 sudo chmod <span class="m">0600</span> /etc/telegraf/telegraf.conf<span class="p">;</span> sudo chown telegraf <span class="nv">$_</span>
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/cpu_temp
-sudo chmod +x /usr/local/bin/cpu_temp
+<span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/mia.sh
+curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/mia
+sudo chmod +x /usr/local/bin/<span class="o">{</span>cpu_temp,mia<span class="o">}</span>
 telegraf -test
 sudo systemctl start telegraf.service
 </pre></div>
@@ -252,10 +255,20 @@ sudo -i -u server bash -c <span class="s1">&#39;umask 0077; touch .ssh/authorize
 <p>Sessions from SSH that are just commands being ran without an interactive session do not get logged to <a class="reference external" href="https://en.wikipedia.org/wiki/wtmp">wtmp</a>. I want
 to enable this to determine if my server hasn&#8217;t SSHed in for a while (e.g. it&#8217;s down).</p>
 <p>Append the following line to the bottom of <code class="docutils literal"><span class="pre">/etc/pam.d/sshd</span></code>:</p>
-<div class="highlight-text"><div class="highlight"><pre><span></span>session optional pam_lastlog.so silent
+<div class="highlight-text"><div class="highlight"><pre><span></span>session required pam_lastlog.so silent
 </pre></div>
 </div>
 <p>Then <strong>reboot</strong>.</p>
+</div>
+<div class="section" id="setup-email">
+<h3>Setup Email<a class="headerlink" href="#setup-email" title="Permalink to this headline">¶</a></h3>
+<p>TODO</p>
+<p>Add these to the <strong>root</strong> crontab. The email configuration from above will take care of forwarding root emails to my
+real email address.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>@hourly journalctl --since<span class="o">=</span><span class="s2">&quot;1 hour ago&quot;</span> --priority<span class="o">=</span>err --quiet
+*/10 * * * * /usr/local/bin/mia server <span class="m">5</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="configure-cellular-modem">
@@ -383,7 +396,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 18, 2017, 6:35:30 AM UTC.
+      Last updated on Mar 19, 2017, 7:34:27 AM UTC.
 
     </p>
   </div>
