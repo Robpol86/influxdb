@@ -44,7 +44,7 @@ this connection indefinitely. For this to work I first need to setup Telegraf an
     url=https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/mia.sh
     curl -s $url |sudo tee /usr/local/bin/mia
     sudo chmod +x /usr/local/bin/{cpu_temp,mia}
-    telegraf -test
+    sudo -u telegraf telegraf -test
     sudo systemctl start telegraf.service
 
 Hardening the Pi
@@ -102,7 +102,7 @@ Then run:
     mail -s "Test Email for Root $(date)" root <<< "This is a test email."
     mail -s "Test Email for Server $(date)" server <<< "This is a test email."
 
-You should receive three emails in your personal email account. If not make sure the numbers in your SparkPost's
+You should receive four emails in your personal email account. If not make sure the numbers in your SparkPost's
 dashboard's usage report have increased.
 
 Add these to the **root** crontab. The email configuration from above will take care of forwarding root emails to my
@@ -117,6 +117,12 @@ Configure Cellular Modem
 ========================
 
 I then setup my modem following this guide: https://robpol86.com/raspberry_pi_project_fi.html
+
+Once done down the interface so apt-get commands don't run over cellular and waste time and data:
+
+.. code-block:: bash
+
+    sudo ifdown wwan0
 
 Install and Configure Tor
 =========================
