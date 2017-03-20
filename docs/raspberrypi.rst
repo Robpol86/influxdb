@@ -68,22 +68,6 @@ Generate SSH keys for the ``pi`` user (for maintenance, not for Server, that's l
     sudo useradd -mp $(openssl rand -base64 20) server; sudo -i -u $_ mkdir -m0700 .ssh
     sudo -i -u server bash -c 'umask 0077; touch .ssh/authorized_keys'
 
-Enable SSH PAM Logging
-----------------------
-
-Sessions from SSH that are just commands being ran without an interactive session do not get logged to `wtmp`_. I want
-to enable this to determine if my server hasn't SSHed in for a while (e.g. it's down).
-
-Append the following line to the bottom of ``/etc/pam.d/sshd``:
-
-.. code-block:: text
-
-    session required pam_lastlog.so silent
-
-Then **reboot**.
-
-.. _wtmp: https://en.wikipedia.org/wiki/wtmp
-
 Setup Email
 -----------
 
