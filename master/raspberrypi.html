@@ -228,7 +228,7 @@ curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local
 <span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/mia.sh
 curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/mia
 sudo chmod +x /usr/local/bin/<span class="o">{</span>cpu_temp,mia<span class="o">}</span>
-telegraf -test
+sudo -u telegraf telegraf -test
 sudo systemctl start telegraf.service
 </pre></div>
 </div>
@@ -278,7 +278,7 @@ mail -s <span class="s2">&quot;Test Email for Root </span><span class="k">$(</sp
 mail -s <span class="s2">&quot;Test Email for Server </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> server <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
 </pre></div>
 </div>
-<p>You should receive three emails in your personal email account. If not make sure the numbers in your SparkPost&#8217;s
+<p>You should receive four emails in your personal email account. If not make sure the numbers in your SparkPost&#8217;s
 dashboard&#8217;s usage report have increased.</p>
 <p>Add these to the <strong>root</strong> crontab. The email configuration from above will take care of forwarding root emails to my
 real email address.</p>
@@ -291,6 +291,10 @@ real email address.</p>
 <div class="section" id="configure-cellular-modem">
 <h2>Configure Cellular Modem<a class="headerlink" href="#configure-cellular-modem" title="Permalink to this headline">¶</a></h2>
 <p>I then setup my modem following this guide: <a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a></p>
+<p>Once done down the interface so apt-get commands don&#8217;t run over cellular and waste time and data:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo ifdown wwan0
+</pre></div>
+</div>
 </div>
 <div class="section" id="install-and-configure-tor">
 <h2>Install and Configure Tor<a class="headerlink" href="#install-and-configure-tor" title="Permalink to this headline">¶</a></h2>
@@ -419,7 +423,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 20, 2017, 1:06:00 AM UTC.
+      Last updated on Mar 20, 2017, 3:41:53 AM UTC.
 
     </p>
   </div>
@@ -443,8 +447,8 @@ sudo docker logs pimon --follow
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../stage/raspberrypi.html">stage</a></dd>
             <dd><a href="raspberrypi.html">master</a></dd>
+            <dd><a href="../stage/raspberrypi.html">stage</a></dd>
         </dl>
     </div>
 </div>
