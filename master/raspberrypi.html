@@ -115,7 +115,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#install-software">Install Software</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#enable-ssh-pam-logging">Enable SSH PAM Logging</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#setup-email">Setup Email</a></li>
 </ul>
 </li>
@@ -250,16 +249,6 @@ sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">2
 sudo -i -u server bash -c <span class="s1">&#39;umask 0077; touch .ssh/authorized_keys&#39;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="enable-ssh-pam-logging">
-<h3>Enable SSH PAM Logging<a class="headerlink" href="#enable-ssh-pam-logging" title="Permalink to this headline">¶</a></h3>
-<p>Sessions from SSH that are just commands being ran without an interactive session do not get logged to <a class="reference external" href="https://en.wikipedia.org/wiki/wtmp">wtmp</a>. I want
-to enable this to determine if my server hasn&#8217;t SSHed in for a while (e.g. it&#8217;s down).</p>
-<p>Append the following line to the bottom of <code class="docutils literal"><span class="pre">/etc/pam.d/sshd</span></code>:</p>
-<div class="highlight-text"><div class="highlight"><pre><span></span>session required pam_lastlog.so silent
-</pre></div>
-</div>
-<p>Then <strong>reboot</strong>.</p>
 </div>
 <div class="section" id="setup-email">
 <h3>Setup Email<a class="headerlink" href="#setup-email" title="Permalink to this headline">¶</a></h3>
@@ -430,7 +419,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 19, 2017, 11:10:28 PM UTC.
+      Last updated on Mar 20, 2017, 1:06:00 AM UTC.
 
     </p>
   </div>
@@ -454,8 +443,8 @@ sudo docker logs pimon --follow
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../stage/raspberrypi.html">stage</a></dd>
             <dd><a href="raspberrypi.html">master</a></dd>
+            <dd><a href="../stage/raspberrypi.html">stage</a></dd>
         </dl>
     </div>
 </div>
