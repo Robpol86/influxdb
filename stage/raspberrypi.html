@@ -294,6 +294,10 @@ real email address.</p>
 <div class="section" id="configure-cellular-modem">
 <h2>Configure Cellular Modem<a class="headerlink" href="#configure-cellular-modem" title="Permalink to this headline">¶</a></h2>
 <p>I then setup my modem following this guide: <a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a></p>
+<p>Once done down the interface so apt-get commands don&#8217;t run over cellular and waste time and data:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo ifdown wwan0
+</pre></div>
+</div>
 </div>
 <div class="section" id="install-and-configure-tor">
 <h2>Install and Configure Tor<a class="headerlink" href="#install-and-configure-tor" title="Permalink to this headline">¶</a></h2>
@@ -422,7 +426,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 20, 2017, 3:16:07 AM UTC.
+      Last updated on Mar 20, 2017, 3:23:36 AM UTC.
 
     </p>
   </div>
