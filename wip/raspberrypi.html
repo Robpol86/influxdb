@@ -252,7 +252,7 @@ sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010
 </div>
 <p>Next get the contents of <code class="docutils literal"><span class="pre">.secrets/pimon.pub</span></code> you generated back in the <a class="reference internal" href="config.html#pimon"><span class="std std-ref">PiMon</span></a> section and run:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
-sudo -i -u server bash -c <span class="s1">&#39;umask 0077; touch cat &gt;&gt; .ssh/authorized_keys&#39;</span>
+sudo -i -u server bash -c <span class="s1">&#39;umask 0077; cat &gt;&gt; .ssh/authorized_keys&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -418,7 +418,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 23, 2017, 10:50:49 PM UTC.
+      Last updated on Mar 23, 2017, 11:29:11 PM UTC.
 
     </p>
   </div>
