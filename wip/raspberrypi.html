@@ -351,21 +351,20 @@ ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:
 </div>
 <div class="section" id="update-container-config">
 <h2>Update Container Config<a class="headerlink" href="#update-container-config" title="Permalink to this headline">¶</a></h2>
-<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">pimon</span></code> container the onion addresses, SSH key, and host key to use. The container
-should be currently running since earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section all containers were started.</p>
+<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">pimon</span></code> container the onion addresses and host key to use. The container should be
+currently running since earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section all containers were started.</p>
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/torrc</code></dt>
+<code class="descname">.secrets/torrc</code></dt>
 <dd><p>Use the output of the <code class="docutils literal"><span class="pre">cat</span> <span class="pre">/var/lib/tor/sshd/hostname</span></code> command from the Raspberry Pi.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo touch /storage/Local/raspberrypi/torrc<span class="p">;</span> sudo chmod <span class="m">0600</span> <span class="nv">$_</span>
-sudo tee <span class="nv">$_</span> <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server&#39;</span>
+<div class="highlight-text"><div class="highlight"><pre><span></span>HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/config</code></dt>
+<code class="descname">.secrets/ssh_config</code></dt>
 <dd><p>Use the hostname specified in the output of the <code class="docutils literal"><span class="pre">cat</span> <span class="pre">/var/lib/tor/sshd/hostname</span></code> command from the Raspberry Pi.</p>
 <div class="highlight-text"><div class="highlight"><pre><span></span>Host raspberrypi
   HostName REPLACE_ME.onion
@@ -375,7 +374,7 @@ sudo tee <span class="nv">$_</span> <span class="o">&lt;&lt;&lt;</span> <span cl
 
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/known_hosts</code></dt>
+<code class="descname">.secrets/known_hosts</code></dt>
 <dd><p>Use the value from the <code class="docutils literal"><span class="pre">ssh-keyscan</span></code> command run on the Raspberry Pi. <strong>Don&#8217;t forget</strong> to replace <code class="docutils literal"><span class="pre">localhost</span></code>
 with the onion hostname used in the other files.</p>
 <div class="highlight-text"><div class="highlight"><pre><span></span>REPLACE_ME.onion ecdsa-sha2-nistp256 AAAAE2...HY0NcRAX37Yk2oie7l8kcY77EhqQ=
@@ -418,7 +417,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 23, 2017, 11:29:11 PM UTC.
+      Last updated on Mar 23, 2017, 11:48:56 PM UTC.
 
     </p>
   </div>
