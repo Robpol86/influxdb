@@ -244,12 +244,15 @@ sudo systemctl start telegraf.service
 <span class="nb">PermitRootLogin</span> no
 </pre></div>
 </div>
-<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance, not for Server, that&#8217;s later) and run:</p>
+<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance, not for Server, that&#8217;s next) and run:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>  <span class="c1"># Run as pi user.</span>
 sudo service ssh restart
 sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
-sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
-sudo -i -u server bash -c <span class="s1">&#39;umask 0077; touch .ssh/authorized_keys&#39;</span>
+</pre></div>
+</div>
+<p>Next get the contents of <code class="docutils literal"><span class="pre">.secrets/pimon.pub</span></code> you generated back in the <a class="reference internal" href="config.html#pimon"><span class="std std-ref">PiMon</span></a> section and run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
+sudo -i -u server bash -c <span class="s1">&#39;umask 0077; touch cat &gt;&gt; .ssh/authorized_keys&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -362,17 +365,6 @@ sudo tee <span class="nv">$_</span> <span class="o">&lt;&lt;&lt;</span> <span cl
 
 <dl class="describe">
 <dt>
-<code class="descname">/storage/Local/raspberrypi/id_rsa</code></dt>
-<dd><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> /storage/Local/raspberrypi
-sudo ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&quot;</span><span class="nv">$HOSTNAME</span><span class="s2">&quot;</span> -N <span class="s2">&quot;&quot;</span> -f id_rsa
-cat id_rsa.pub
-</pre></div>
-</div>
-<p>Append this public key to the <code class="docutils literal"><span class="pre">/home/server/.ssh/authorized_keys</span></code> file on the Raspberry Pi.</p>
-</dd></dl>
-
-<dl class="describe">
-<dt>
 <code class="descname">/storage/Local/raspberrypi/config</code></dt>
 <dd><p>Use the hostname specified in the output of the <code class="docutils literal"><span class="pre">cat</span> <span class="pre">/var/lib/tor/sshd/hostname</span></code> command from the Raspberry Pi.</p>
 <div class="highlight-text"><div class="highlight"><pre><span></span>Host raspberrypi
@@ -426,7 +418,7 @@ sudo docker logs pimon --follow
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 20, 2017, 3:41:53 AM UTC.
+      Last updated on Mar 23, 2017, 10:50:49 PM UTC.
 
     </p>
   </div>
