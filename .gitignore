@@ -90,5 +90,6 @@ ENV/
 
 # Robpol86
 *.rpm
-.idea/
 .DS_Store
+.idea/
+.secrets/

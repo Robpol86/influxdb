@@ -35,12 +35,15 @@ Quick Start
 
 .. clone-section-start
 
-Clone this repo locally (or fork it and clone that repo) to your Docker host (I put mine in ``/opt/influxdb``):
+Clone this repo locally (or fork it and clone that repo) to your Docker host (I put mine in ``/opt/influxdb``). Also
+prepare your secrets by creating empty files with the right permissions:
 
 .. code-block:: bash
 
     sudo mkdir /opt/influxdb; cd $_
     sudo git clone https://github.com/Robpol86/influxdb.git .
+    sudo mkdir -m0750 .secrets
+    sudo install -m 0600 /dev/null .secrets/grafana.ini
 
 Next you'll want to glance over the various configuration files in this repo. They work for me but you may have a
 different setup. Start with `docker-compose.yml <https://github.com/Robpol86/influxdb/blob/master/docker-compose.yml>`_

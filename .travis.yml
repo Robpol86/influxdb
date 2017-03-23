@@ -4,7 +4,10 @@ python: 3.4
 sudo: false
 
 # Run.
-install: pip install -r docs/requirements.txt docker-compose
+install:
+  - pip install -U 'pip>=9' 'setuptools>=34'  # TODO: remove when >1.12.0rc1 is released.
+  - pip install -r docs/requirements.txt docker-compose
+  - pip install -U git+https://github.com/docker/compose.git  # TODO: remove when >1.12.0rc1 is released.
 script:
   - docker-compose config
   - sphinx-build -W docs docs/_build/html

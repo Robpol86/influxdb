@@ -42,3 +42,19 @@ Grafana
   * Name: **telegraf**; Default: **✓**; Type: **InfluxDB**
   * Url: **http://influxdb:8086**; Access: **proxy**
   * Database: **telegraf**; User: **grafana**; Password: **REPLACE_ME**
+
+.. describe:: .secrets/grafana.ini
+
+    Go to SparkPost and create a new API key with permissions **Send via SMTP** and **Templates: Read-only**. Then edit
+    this file with the following contents (replace ``$API_KEY``, no need for quotes):
+
+    .. code-block:: ini
+
+        [smtp]
+        password = $API_KEY
+
+    Then restart the container:
+
+    .. code-block:: bash
+
+        sudo docker restart grafana
