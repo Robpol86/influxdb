@@ -113,6 +113,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Initial Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#influxdb">InfluxDB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#grafana">Grafana</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pimon">PiMon</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
@@ -250,6 +251,18 @@ this file with the following contents (replace <code class="docutils literal"><s
 </dd></dl>
 
 </div>
+<div class="section" id="pimon">
+<h2>PiMon<a class="headerlink" href="#pimon" title="Permalink to this headline">¶</a></h2>
+<dl class="describe">
+<dt>
+<code class="descname">.secrets/pimon</code></dt>
+<dd><p>Create an SSH key pair to be used to SSH into the Raspberry Pi from the PiMon docker container:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&quot;</span><span class="nv">$HOSTNAME</span><span class="s2">&quot;</span> -N <span class="s2">&quot;&quot;</span> -f .secrets/pimon
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -275,7 +288,7 @@ this file with the following contents (replace <code class="docutils literal"><s
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 23, 2017, 9:16:02 PM UTC.
+      Last updated on Mar 23, 2017, 10:37:13 PM UTC.
 
     </p>
   </div>
@@ -299,8 +312,8 @@ this file with the following contents (replace <code class="docutils literal"><s
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../master/config.html">master</a></dd>
             <dd><a href="config.html">wip</a></dd>
+            <dd><a href="../master/config.html">master</a></dd>
         </dl>
     </div>
 </div>
