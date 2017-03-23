@@ -201,9 +201,12 @@ file since it doesn&#8217;t include that directory in the <code class="docutils 
 </ol>
 <div class="section" id="clone">
 <h2>Clone<a class="headerlink" href="#clone" title="Permalink to this headline">¶</a></h2>
-<p>Clone this repo locally (or fork it and clone that repo) to your Docker host (I put mine in <code class="docutils literal"><span class="pre">/opt/influxdb</span></code>):</p>
+<p>Clone this repo locally (or fork it and clone that repo) to your Docker host (I put mine in <code class="docutils literal"><span class="pre">/opt/influxdb</span></code>). Also
+prepare your secrets by creating empty files with the right permissions:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo mkdir /opt/influxdb<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$_</span>
 sudo git clone https://github.com/Robpol86/influxdb.git .
+sudo mkdir -m0750 .secrets
+sudo install -m <span class="m">0600</span> /dev/null .secrets/grafana.ini
 </pre></div>
 </div>
 <p>Next you&#8217;ll want to glance over the various configuration files in this repo. They work for me but you may have a
@@ -271,7 +274,7 @@ sudo systemctl restart firewalld.service
         <dl>
             <dt>Branches</dt>
             <dd><a href="master/install.html">master</a></dd>
-            <dd><a href="stage/install.html">stage</a></dd>
+            <dd><a href="wip/install.html">wip</a></dd>
         </dl>
     </div>
 </div>

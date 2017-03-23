@@ -231,6 +231,21 @@ databases in the Docker containers.</p>
 <li>Database: <strong>telegraf</strong>; User: <strong>grafana</strong>; Password: <strong>REPLACE_ME</strong></li>
 </ul>
 </div></blockquote>
+<dl class="describe">
+<dt>
+<code class="descname">.secrets/grafana.ini</code></dt>
+<dd><p>Go to SparkPost and create a new API key with permissions <strong>Send via SMTP</strong> and <strong>Templates: Read-only</strong>. Then edit
+this file with the following contents (replace <code class="docutils literal"><span class="pre">$API_KEY</span></code>, no need for quotes):</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="k">[smtp]</span>
+<span class="na">password</span> <span class="o">=</span> <span class="s">$API_KEY</span>
+</pre></div>
+</div>
+<p>Then restart the container:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart grafana
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 
@@ -257,7 +272,7 @@ databases in the Docker containers.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 16, 2017, 8:28:21 AM UTC.
+      Last updated on Mar 23, 2017, 9:16:02 PM UTC.
 
     </p>
   </div>
@@ -282,7 +297,7 @@ databases in the Docker containers.</p>
         <dl>
             <dt>Branches</dt>
             <dd><a href="master/config.html">master</a></dd>
-            <dd><a href="stage/config.html">stage</a></dd>
+            <dd><a href="wip/config.html">wip</a></dd>
         </dl>
     </div>
 </div>
