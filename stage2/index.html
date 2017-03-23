@@ -1,0 +1,341 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-82627369-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Home Monitoring &mdash; InfluxDB Home Monitoring</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="InfluxDB Home Monitoring" href="#"/>
+        <link rel="next" title="Preparing the Server" href="prepare.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> InfluxDB Home Monitoring
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">InfluxDB Home Monitoring</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Home Monitoring</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Robpol86/influxdb/blob/stage2/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../master/index.html"><b>Warning:</b> This document is for the development version of InfluxDB Home Monitoring. The main version is master.</a></p>
+<div class="section" id="home-monitoring">
+<h1>Home Monitoring<a class="headerlink" href="#home-monitoring" title="Permalink to this headline">¶</a></h1>
+<p>This is the <a class="reference external" href="https://docs.docker.com/compose">docker-compose</a> stack I use for my home network&#8217;s monitoring. It
+contains the following containers:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.influxdata.com/influxdb">InfluxDB</a> to store all of the metrics (the central piece of the setup).</li>
+<li><a class="reference external" href="http://grafana.org">Grafana</a> to show pretty graphs of all the metrics</li>
+<li><a class="reference external" href="https://docs.influxdata.com/kapacitor">Kapacitor</a> to email alerts when things break.</li>
+<li><a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">Raspberry Pi</a> or other Linux system for external monitoring.</li>
+</ul>
+<p>I also use the following services:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.sparkpost.com/pricing">SparkPost</a> free tier for sending alerts emails.</li>
+<li><a class="reference external" href="https://www.torproject.org">Tor</a> for our external Linux system to get around NAT/Firewalls.</li>
+</ul>
+<p>This website is my brain dump on how I got monitoring and alerting setup on my
+<a class="reference external" href="https://robpol86.com/my_awesome_server.html">home server</a> from scratch. If you plan on using it for your server
+you&#8217;ll need to be on the lookout for my hostnames and IP addresses and substitute them with your own.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#ssl-certificate">SSL Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#docker-and-compose">Docker and Compose</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#etc-resolv-conf-fix">/etc/resolv.conf Fix</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#clone">Clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#start-containers">Start Containers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config.html#influxdb">InfluxDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config.html#grafana">Grafana</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#install-telegraf">Install Telegraf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#tweak-and-verify">Tweak and Verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telegraf.html#getsockopt-connection-refused-fix">getsockopt: Connection Refused Fix</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#preparing-the-pi">Preparing the Pi</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#install-software">Install Software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#hardening-the-pi">Hardening the Pi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#setup-email">Setup Email</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#configure-cellular-modem">Configure Cellular Modem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#install-and-configure-tor">Install and Configure Tor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#verifying">Verifying</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#update-container-config">Update Container Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="prepare.html" class="btn btn-neutral float-right" title="Preparing the Server" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, @Robpol86.
+      Last updated on Mar 13, 2017, 3:06:50 AM UTC.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: stage2
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="index.html">stage2</a></dd>
+            <dd><a href="../stage/index.html">stage</a></dd>
+            <dd><a href="../master/index.html">master</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
