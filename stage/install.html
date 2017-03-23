@@ -204,14 +204,17 @@ file since it doesn&#8217;t include that directory in the <code class="docutils 
 </ol>
 <div class="section" id="clone">
 <h2>Clone<a class="headerlink" href="#clone" title="Permalink to this headline">¶</a></h2>
-<p>Clone this repo locally (or fork it and clone that repo) to your Docker host. I put mine in <code class="docutils literal"><span class="pre">/opt/influxdb</span></code>:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo mkdir /opt/influxdb
-sudo git clone https://github.com/Robpol86/influxdb.git /opt/influxdb
+<p>Clone this repo locally (or fork it and clone that repo) to your Docker host (I put mine in <code class="docutils literal"><span class="pre">/opt/influxdb</span></code>). Also
+prepare your secrets by creating empty files with the right permissions:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo mkdir /opt/influxdb<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$_</span>
+sudo git clone https://github.com/Robpol86/influxdb.git .
+sudo mkdir -m0750 .secrets
+sudo install -m <span class="m">0600</span> /dev/null .secrets/grafana.ini
 </pre></div>
 </div>
-<p>Next you&#8217;ll probably want to glance over the various configuration files in this repo. They work for me but you may have
-a slightly different setup. Look at configs such as
-<a class="reference external" href="https://github.com/Robpol86/influxdb/blob/master/docker-compose.yml">docker-compose.yml</a>.</p>
+<p>Next you&#8217;ll want to glance over the various configuration files in this repo. They work for me but you may have a
+different setup. Start with <a class="reference external" href="https://github.com/Robpol86/influxdb/blob/master/docker-compose.yml">docker-compose.yml</a>
+and look at other configuration files in this repository.</p>
 </div>
 <div class="section" id="start-containers">
 <h2>Start Containers<a class="headerlink" href="#start-containers" title="Permalink to this headline">¶</a></h2>
@@ -249,7 +252,7 @@ sudo systemctl restart firewalld.service
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 17, 2017, 3:29:57 AM UTC.
+      Last updated on Mar 23, 2017, 8:51:01 PM UTC.
 
     </p>
   </div>
