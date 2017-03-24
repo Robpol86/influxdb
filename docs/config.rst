@@ -39,9 +39,12 @@ Grafana
 4. Browse to https://filesrv.rob86.net:3000/org and set name to "Home".
 5. Browse to https://filesrv.rob86.net:3000/datasources/new and set:
 
-  * Name: **telegraf**; Default: **✓**; Type: **InfluxDB**
-  * Url: **http://influxdb:8086**; Access: **proxy**
-  * Database: **telegraf**; User: **grafana**; Password: **REPLACE_ME**
+    * Name: **telegraf**; Default: **✓**; Type: **InfluxDB**
+    * Url: **http://influxdb:8086**; Access: **proxy**
+    * Database: **telegraf**; User: **grafana**; Password: **REPLACE_ME**
+
+6. Browse to https://filesrv.rob86.net:3000/alerting/notification/new and send all alerts to your email address.
+7. Import dashboard JSONs from: https://github.com/Robpol86/influxdb/tree/master/grafana
 
 .. describe:: .secrets/grafana.ini
 

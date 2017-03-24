@@ -1,6 +1,6 @@
-==========================================
-InfluxDB, Grafana, Kapacitor, Raspberry Pi
-==========================================
+===============================
+InfluxDB, Grafana, Raspberry Pi
+===============================
 
 .. image:: https://img.shields.io/travis/Robpol86/influxdb/master.svg?style=flat-square&label=Travis%20CI
     :target: https://travis-ci.org/Robpol86/influxdb
@@ -12,8 +12,7 @@ This is the `docker-compose <https://docs.docker.com/compose>`_ stack I use for 
 contains the following containers:
 
 * `InfluxDB <https://docs.influxdata.com/influxdb>`_ to store all of the metrics (the central piece of the setup).
-* `Grafana <http://grafana.org>`_ to show pretty graphs of all the metrics
-* `Kapacitor <https://docs.influxdata.com/kapacitor>`_ to email alerts when things break.
+* `Grafana <http://grafana.org>`_ to show pretty graphs and email me alerts.
 * `Raspberry Pi <https://robpol86.com/raspberry_pi_project_fi.html>`_ or other Linux system for external monitoring.
 
 I also use the following services:
