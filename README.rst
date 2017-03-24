@@ -43,7 +43,9 @@ prepare your secrets by creating empty files with the right permissions:
     sudo mkdir /opt/influxdb; cd $_
     sudo git clone https://github.com/Robpol86/influxdb.git .
     sudo mkdir -m0750 .secrets
-    sudo install -m 0600 /dev/null .secrets/grafana.ini
+    for f in grafana.ini torrc ssh_config known_hosts pimon; do
+        sudo touch .secrets/$f; sudo chmod 0600 $_
+    done
 
 Next you'll want to glance over the various configuration files in this repo. They work for me but you may have a
 different setup. Start with `docker-compose.yml <https://github.com/Robpol86/influxdb/blob/master/docker-compose.yml>`_

@@ -58,3 +58,14 @@ Grafana
     .. code-block:: bash
 
         sudo docker restart grafana
+
+PiMon
+=====
+
+.. describe:: .secrets/pimon
+
+    Create an SSH key pair to be used to SSH into the Raspberry Pi from the PiMon docker container:
+
+    .. code-block:: bash
+
+        sudo ssh-keygen -t rsa -b 4096 -C "$HOSTNAME" -N "" -f .secrets/pimon

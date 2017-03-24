@@ -58,15 +58,20 @@ Before exposing the Pi to Tor it's a good idea to lock it down. Remember to **en
     PasswordAuthentication no
     PermitRootLogin no
 
-Generate SSH keys for the ``pi`` user (for maintenance, not for Server, that's later) and run:
+Generate SSH keys for the ``pi`` user (for maintenance, not for Server, that's next) and run:
 
 .. code-block:: bash
 
     mkdir -m0700 .ssh; (umask 0077; cat >> .ssh/authorized_keys)  # Run as pi user.
     sudo service ssh restart
     sudo sed -i 's/NOPASSWD: //g' /etc/sudoers.d/010_pi-nopasswd
+
+Next get the contents of ``.secrets/pimon.pub`` you generated back in the :ref:`PiMon` section and run:
+
+.. code-block:: bash
+
     sudo useradd -mp $(openssl rand -base64 20) server; sudo -i -u $_ mkdir -m0700 .ssh
-    sudo -i -u server bash -c 'umask 0077; touch .ssh/authorized_keys'
+    sudo -i -u server bash -c 'umask 0077; cat >> .ssh/authorized_keys'
 
 Setup Email
 -----------
@@ -187,29 +192,18 @@ in:
 Update Container Config
 =======================
 
-Finally it's time to tell the ``pimon`` container the onion addresses, SSH key, and host key to use. The container
-should be currently running since earlier in the :ref:`Start Containers` section all containers were started.
+Finally it's time to tell the ``pimon`` container the onion addresses and host key to use. The container should be
+currently running since earlier in the :ref:`Start Containers` section all containers were started.
 
-.. describe:: /storage/Local/raspberrypi/torrc
+.. describe:: .secrets/torrc
 
     Use the output of the ``cat /var/lib/tor/sshd/hostname`` command from the Raspberry Pi.
 
-    .. code-block:: bash
+    .. code-block:: text
 
-        sudo touch /storage/Local/raspberrypi/torrc; sudo chmod 0600 $_
-        sudo tee $_ <<< 'HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server'
+        HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server
 
-.. describe:: /storage/Local/raspberrypi/id_rsa
-
-    .. code-block:: bash
-
-        cd /storage/Local/raspberrypi
-        sudo ssh-keygen -t rsa -b 4096 -C "$HOSTNAME" -N "" -f id_rsa
-        cat id_rsa.pub
-
-    Append this public key to the ``/home/server/.ssh/authorized_keys`` file on the Raspberry Pi.
-
-.. describe:: /storage/Local/raspberrypi/config
+.. describe:: .secrets/ssh_config
 
     Use the hostname specified in the output of the ``cat /var/lib/tor/sshd/hostname`` command from the Raspberry Pi.
 
@@ -218,7 +212,7 @@ should be currently running since earlier in the :ref:`Start Containers` section
         Host raspberrypi
           HostName REPLACE_ME.onion
 
-.. describe:: /storage/Local/raspberrypi/known_hosts
+.. describe:: .secrets/known_hosts
 
     Use the value from the ``ssh-keyscan`` command run on the Raspberry Pi. **Don't forget** to replace ``localhost``
     with the onion hostname used in the other files.
