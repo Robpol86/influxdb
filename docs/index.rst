@@ -2,6 +2,9 @@
 Home Monitoring
 ===============
 
+.. image:: _static/grafana_filesrv.png
+    :target: _images/grafana_filesrv.png
+
 .. include:: ../README.rst
     :start-after: summary-section-start
     :end-before: summary-section-end

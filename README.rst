@@ -6,6 +6,9 @@ InfluxDB, Grafana, Raspberry Pi
     :target: https://travis-ci.org/Robpol86/influxdb
     :alt: Build Status
 
+.. image:: docs/_static/grafana_filesrv.png
+    :target: docs/_static/grafana_filesrv.png
+
 .. summary-section-start
 
 This is the `docker-compose <https://docs.docker.com/compose>`_ stack I use for my home network's monitoring. It

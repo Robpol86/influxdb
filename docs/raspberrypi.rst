@@ -4,6 +4,9 @@
 Raspberry Pi Watchdog
 =====================
 
+.. image:: _static/pimon.jpg
+    :target: _images/pimon.jpg
+
 What if my server hangs or goes down when I'm not directly using it? All of this monitoring software I'm setting up
 won't notify me when my server is unresponsive. My solution to this problem is a dedicated `Raspberry Pi`_ with a
 `cellular connection`_ on a `UPS`_. However these instructions should work on any Linux computer with a network

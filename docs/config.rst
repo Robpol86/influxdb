@@ -33,6 +33,9 @@ InfluxDB
 Grafana
 =======
 
+.. image:: _static/grafana_email.png
+    :target: _images/grafana_email.png
+
 1. Browse to https://filesrv.rob86.net:3000/profile (your Docker host's hostname).
 2. Login with admin/admin.
 3. Change the password, put your real email, and set any other settings desired.
