@@ -1109,6 +1109,7 @@
           "aliasColors": {},
           "bars": false,
           "datasource": "${DS_TELEGRAF}",
+          "decimals": 1,
           "fill": 1,
           "id": 11,
           "legend": {
@@ -1184,14 +1185,8 @@
                 {
                   "condition": "AND",
                   "key": "path",
-                  "operator": "=",
-                  "value": "/storage"
-                },
-                {
-                  "condition": "OR",
-                  "key": "path",
-                  "operator": "=",
-                  "value": "/"
+                  "operator": "=~",
+                  "value": "/^\\/(storage)?$/"
                 }
               ]
             }
@@ -1252,6 +1247,8 @@
             "max": true,
             "min": true,
             "show": true,
+            "sort": "current",
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -1269,7 +1266,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "alias": "Read",
+              "alias": "$tag_name: Read",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -1277,6 +1274,12 @@
                     "$__interval"
                   ],
                   "type": "time"
+                },
+                {
+                  "params": [
+                    "name"
+                  ],
+                  "type": "tag"
                 },
                 {
                   "params": [
@@ -1288,7 +1291,7 @@
               "measurement": "diskio",
               "policy": "default",
               "query": "SELECT non_negative_derivative(last(\"read_bytes\"), 1s) FROM \"diskio\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /^sd.$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
-              "rawQuery": true,
+              "rawQuery": false,
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -1301,7 +1304,7 @@
                   },
                   {
                     "params": [],
-                    "type": "sum"
+                    "type": "last"
                   },
                   {
                     "params": [
@@ -1320,13 +1323,13 @@
                 {
                   "condition": "AND",
                   "key": "name",
-                  "operator": "=",
-                  "value": "sda"
+                  "operator": "=~",
+                  "value": "/^sd.$/"
                 }
               ]
             },
             {
-              "alias": "Write",
+              "alias": "$tag_name: Write",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -1334,6 +1337,12 @@
                     "$__interval"
                   ],
                   "type": "time"
+                },
+                {
+                  "params": [
+                    "name"
+                  ],
+                  "type": "tag"
                 },
                 {
                   "params": [
@@ -1345,20 +1354,20 @@
               "measurement": "diskio",
               "policy": "default",
               "query": "SELECT non_negative_derivative(last(\"write_bytes\"), 1s) FROM \"diskio\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /^sd.$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
-              "rawQuery": true,
+              "rawQuery": false,
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
                 [
                   {
                     "params": [
-                      "read_bytes"
+                      "write_bytes"
                     ],
                     "type": "field"
                   },
                   {
                     "params": [],
-                    "type": "sum"
+                    "type": "last"
                   },
                   {
                     "params": [
@@ -1377,8 +1386,8 @@
                 {
                   "condition": "AND",
                   "key": "name",
-                  "operator": "=",
-                  "value": "sda"
+                  "operator": "=~",
+                  "value": "/^sd.$/"
                 }
               ]
             }
@@ -2218,7 +2227,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 3,
+          "span": 4,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -2406,7 +2415,7 @@
             "hideZero": true,
             "max": true,
             "min": true,
-            "rightSide": true,
+            "rightSide": false,
             "show": true,
             "sort": "current",
             "sortDesc": true,
@@ -2422,7 +2431,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 5,
+          "span": 4,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -2850,5 +2859,5 @@
   },
   "timezone": "browser",
   "title": "FileSrv",
-  "version": 57
+  "version": 66
 }
