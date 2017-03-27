@@ -142,7 +142,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             }
@@ -170,217 +170,8 @@
     },
     {
       "collapse": false,
-      "height": "420",
+      "height": "250",
       "panels": [
-        {
-          "alert": {
-            "conditions": [
-              {
-                "evaluator": {
-                  "params": [
-                    140
-                  ],
-                  "type": "gt"
-                },
-                "operator": {
-                  "type": "and"
-                },
-                "query": {
-                  "datasourceId": 1,
-                  "model": {
-                    "alias": "$tag_device",
-                    "dsType": "influxdb",
-                    "groupBy": [
-                      {
-                        "params": [
-                          "$interval"
-                        ],
-                        "type": "time"
-                      },
-                      {
-                        "params": [
-                          "device"
-                        ],
-                        "type": "tag"
-                      },
-                      {
-                        "params": [
-                          "previous"
-                        ],
-                        "type": "fill"
-                      }
-                    ],
-                    "measurement": "hddtemp",
-                    "policy": "default",
-                    "refId": "A",
-                    "resultFormat": "time_series",
-                    "select": [
-                      [
-                        {
-                          "params": [
-                            "temperature"
-                          ],
-                          "type": "field"
-                        },
-                        {
-                          "params": [],
-                          "type": "max"
-                        }
-                      ]
-                    ],
-                    "tags": [
-                      {
-                        "key": "host",
-                        "operator": "=",
-                        "value": "filesrv.rob86.net"
-                      }
-                    ]
-                  },
-                  "params": [
-                    "A",
-                    "5m",
-                    "now"
-                  ]
-                },
-                "reducer": {
-                  "params": [],
-                  "type": "max"
-                },
-                "type": "query"
-              }
-            ],
-            "executionErrorState": "keep_state",
-            "frequency": "60s",
-            "handler": 1,
-            "name": "HDD Temp alert",
-            "noDataState": "no_data",
-            "notifications": []
-          },
-          "aliasColors": {},
-          "bars": false,
-          "datasource": "${DS_TELEGRAF}",
-          "fill": 1,
-          "id": 1,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "hideEmpty": true,
-            "hideZero": true,
-            "max": true,
-            "min": true,
-            "show": true,
-            "sort": "current",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 3,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "alias": "$tag_device",
-              "dsType": "influxdb",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "device"
-                  ],
-                  "type": "tag"
-                },
-                {
-                  "params": [
-                    "previous"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "hddtemp",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "temperature"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "max"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=",
-                  "value": "filesrv.rob86.net"
-                }
-              ]
-            }
-          ],
-          "thresholds": [
-            {
-              "colorMode": "critical",
-              "fill": true,
-              "line": true,
-              "op": "gt",
-              "value": 140
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "HDD Temp",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "farenheit",
-              "label": "",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ]
-        },
         {
           "alert": {
             "conditions": [
@@ -421,7 +212,7 @@
                     ],
                     "measurement": "ipmi_sensor",
                     "policy": "default",
-                    "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
+                    "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'pimon.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -449,7 +240,7 @@
                       {
                         "key": "host",
                         "operator": "=",
-                        "value": "filesrv.rob86.net"
+                        "value": "pimon.rob86.net"
                       },
                       {
                         "condition": "AND",
@@ -472,7 +263,7 @@
                 "type": "query"
               }
             ],
-            "executionErrorState": "keep_state",
+            "executionErrorState": "alerting",
             "frequency": "60s",
             "handler": 1,
             "name": "System Temp alert",
@@ -508,12 +299,12 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 3,
+          "span": 12,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "alias": "$tag_name",
+              "alias": "CPU",
               "dsType": "influxdb",
               "groupBy": [
                 {
@@ -524,20 +315,14 @@
                 },
                 {
                   "params": [
-                    "name"
-                  ],
-                  "type": "tag"
-                },
-                {
-                  "params": [
                     "previous"
                   ],
                   "type": "fill"
                 }
               ],
-              "measurement": "ipmi_sensor",
+              "measurement": "exec_cpu_temp",
               "policy": "default",
-              "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
+              "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'pimon.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
               "rawQuery": false,
               "refId": "A",
               "resultFormat": "time_series",
@@ -552,12 +337,6 @@
                   {
                     "params": [],
                     "type": "max"
-                  },
-                  {
-                    "params": [
-                      "* 9/5 + 32"
-                    ],
-                    "type": "math"
                   }
                 ]
               ],
@@ -565,13 +344,13 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
                   "key": "name",
-                  "operator": "=~",
-                  "value": "/_temp$/"
+                  "operator": "=",
+                  "value": "cpu_temp"
                 }
               ]
             }
@@ -604,253 +383,6 @@
             {
               "format": "farenheit",
               "label": "",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": "${DS_TELEGRAF}",
-          "decimals": null,
-          "fill": 1,
-          "id": 7,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "hideEmpty": true,
-            "hideZero": true,
-            "max": true,
-            "min": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 3,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "alias": "$tag_name",
-              "dsType": "influxdb",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "name"
-                  ],
-                  "type": "tag"
-                },
-                {
-                  "params": [
-                    "previous"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "ipmi_sensor",
-              "policy": "default",
-              "query": "SELECT max(\"value\") FROM \"ipmi_sensor\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /^fan/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
-              "rawQuery": false,
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "max"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=",
-                  "value": "filesrv.rob86.net"
-                },
-                {
-                  "condition": "AND",
-                  "key": "name",
-                  "operator": "=~",
-                  "value": "/^fan/"
-                }
-              ]
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Fan Speed",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "none",
-              "label": "RPM",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": "${DS_TELEGRAF}",
-          "decimals": 2,
-          "fill": 1,
-          "id": 9,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "max": true,
-            "min": true,
-            "rightSide": false,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 3,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "alias": "$tag_name",
-              "dsType": "influxdb",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "name"
-                  ],
-                  "type": "tag"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "ipmi_sensor",
-              "policy": "default",
-              "refId": "I",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host",
-                  "operator": "=",
-                  "value": "filesrv.rob86.net"
-                },
-                {
-                  "condition": "AND",
-                  "key": "name",
-                  "operator": "=~",
-                  "value": "/^(12v|vdimm|vccp|vbat|5v|3.3v)/"
-                }
-              ]
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Voltages",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "volt",
-              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -946,7 +478,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             },
@@ -989,7 +521,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             },
@@ -1032,7 +564,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             }
@@ -1078,7 +610,7 @@
               {
                 "evaluator": {
                   "params": [
-                    10737418240
+                    1073741824
                   ],
                   "type": "lt"
                 },
@@ -1180,13 +712,13 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
                   "key": "path",
-                  "operator": "=~",
-                  "value": "/^\\/(storage)?$/"
+                  "operator": "=",
+                  "value": "/"
                 }
               ]
             }
@@ -1197,7 +729,7 @@
               "fill": true,
               "line": true,
               "op": "lt",
-              "value": 10737418240
+              "value": 1073741824
             }
           ],
           "timeFrom": null,
@@ -1292,7 +824,7 @@
               ],
               "measurement": "diskio",
               "policy": "default",
-              "query": "SELECT non_negative_derivative(last(\"read_bytes\"), 1s) FROM \"diskio\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /^sd.$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
+              "query": "SELECT non_negative_derivative(last(\"read_bytes\"), 1s) FROM \"diskio\" WHERE \"host\" = 'pimon.rob86.net' AND \"name\" =~ /^sd.$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
               "rawQuery": false,
               "refId": "B",
               "resultFormat": "time_series",
@@ -1320,13 +852,13 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
                   "key": "name",
-                  "operator": "=~",
-                  "value": "/^sd.$/"
+                  "operator": "=",
+                  "value": "mmcblk0"
                 }
               ]
             },
@@ -1355,7 +887,7 @@
               ],
               "measurement": "diskio",
               "policy": "default",
-              "query": "SELECT non_negative_derivative(last(\"write_bytes\"), 1s) FROM \"diskio\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /^sd.$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
+              "query": "SELECT non_negative_derivative(last(\"write_bytes\"), 1s) FROM \"diskio\" WHERE \"host\" = 'pimon.rob86.net' AND \"name\" =~ /^sd.$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
               "rawQuery": false,
               "refId": "A",
               "resultFormat": "time_series",
@@ -1383,13 +915,13 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
                   "key": "name",
-                  "operator": "=~",
-                  "value": "/^sd.$/"
+                  "operator": "=",
+                  "value": "mmcblk0"
                 }
               ]
             }
@@ -1447,7 +979,7 @@
               {
                 "evaluator": {
                   "params": [
-                    16
+                    1
                   ],
                   "type": "gt"
                 },
@@ -1470,7 +1002,7 @@
               {
                 "evaluator": {
                   "params": [
-                    16
+                    1
                   ],
                   "type": "gt"
                 },
@@ -1493,7 +1025,7 @@
               {
                 "evaluator": {
                   "params": [
-                    16
+                    1
                   ],
                   "type": "gt"
                 },
@@ -1540,7 +1072,7 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null",
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -1589,7 +1121,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             },
@@ -1632,7 +1164,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             },
@@ -1675,7 +1207,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             }
@@ -1686,7 +1218,7 @@
               "fill": true,
               "line": true,
               "op": "gt",
-              "value": 16
+              "value": 1
             }
           ],
           "timeFrom": null,
@@ -1742,7 +1274,7 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null",
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -1791,7 +1323,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
@@ -1840,7 +1372,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
@@ -1889,7 +1421,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
@@ -1938,7 +1470,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
@@ -1987,7 +1519,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
@@ -2036,7 +1568,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
@@ -2105,7 +1637,7 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null",
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -2154,7 +1686,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             }
@@ -2292,13 +1824,13 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
                   "key": "interface",
                   "operator": "=",
-                  "value": "eno3"
+                  "value": "wwan0"
                 }
               ]
             },
@@ -2359,13 +1891,13 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 },
                 {
                   "condition": "AND",
                   "key": "interface",
                   "operator": "=",
-                  "value": "eno3"
+                  "value": "wwan0"
                 }
               ]
             }
@@ -2429,7 +1961,7 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null",
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -2478,7 +2010,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             }
@@ -2524,7 +2056,7 @@
               {
                 "evaluator": {
                   "params": [
-                    10
+                    1000
                   ],
                   "type": "gt"
                 },
@@ -2547,7 +2079,7 @@
               {
                 "evaluator": {
                   "params": [
-                    10
+                    100
                   ],
                   "type": "gt"
                 },
@@ -2595,7 +2127,7 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null",
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -2671,7 +2203,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             },
@@ -2720,7 +2252,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             },
@@ -2769,7 +2301,7 @@
                 {
                   "key": "host",
                   "operator": "=",
-                  "value": "filesrv.rob86.net"
+                  "value": "pimon.rob86.net"
                 }
               ]
             }
@@ -2780,7 +2312,7 @@
               "fill": true,
               "line": true,
               "op": "gt",
-              "value": 10
+              "value": 1000
             }
           ],
           "timeFrom": null,
@@ -2862,6 +2394,6 @@
     ]
   },
   "timezone": "browser",
-  "title": "FileSrv",
-  "version": 70
+  "title": "PiMon",
+  "version": 9
 }
