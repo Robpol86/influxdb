@@ -22,6 +22,7 @@ services:
     entrypoint: 'bash -c "cp /run/secrets/grafana /etc/grafana/grafana.ini && . run.sh"'  # TODO: Use secrets uid/mode
     environment:
       - GF_SECURITY_DISABLE_GRAVATAR=true
+      - GF_SERVER_DOMAIN=filesrv.rob86.net
       - GF_SMTP_ENABLED=true
       - GF_SMTP_FROM_ADDRESS=grafana@robpol86.com
       - GF_SMTP_HOST=smtp.sparkpostmail.com:587
