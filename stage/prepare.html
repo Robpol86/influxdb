@@ -294,13 +294,13 @@ containers emailed to you. First create (or add to) <code class="docutils litera
 <span class="k">[Service]</span>
 <span class="na">Environment</span><span class="o">=</span><span class="s">&quot;FORMAT={{.ID}} {{.Actor.Attributes.name}} {{.From}} {{.Actor.Attributes.exitCode}}&quot;</span>
 <span class="na">Environment</span><span class="o">=</span><span class="s">&quot;RECIPIENT=root&quot;</span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/bash -c &#39;</span>
-<span class="s">    docker events --filter &#39;event=die&#39; --format &quot;$FORMAT&quot; |</span>
-<span class="s">    while read cid name image ret; do</span>
-<span class="s">        [ &quot;$ret&quot; -eq &quot;0&quot; ] &amp;&amp; continue</span>
-<span class="s">        journalctl --since=&quot;2 hours ago&quot; CONTAINER_ID_FULL=$cid |</span>
-<span class="s">            mail -s &quot;$name ($image) failed with $ret&quot; $RECIPIENT</span>
-<span class="s">    done</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/bash -c &#39; \</span>
+<span class="s">    docker events --filter &quot;event=die&quot; --format &quot;$FORMAT&quot; | \</span>
+<span class="s">    while read cid name image ret; do \</span>
+<span class="s">        [ &quot;$ret&quot; -eq &quot;0&quot; ] &amp;&amp; continue; \</span>
+<span class="s">        journalctl --since=&quot;2 hours ago&quot; CONTAINER_ID_FULL=$cid | \</span>
+<span class="s">            mail -s &quot;$name ($image) failed with $ret&quot; $RECIPIENT; \</span>
+<span class="s">    done \</span>
 <span class="na">&#39;</span>
 <span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
 
