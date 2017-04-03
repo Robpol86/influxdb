@@ -275,10 +275,47 @@ containers emailed to you. First create (or add to) <code class="docutils litera
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Then run:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo systemctl restart docker
+<p>Next install this systemd file:</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="c1"># Look for containers that exit non-zero and email logs.</span>
+<span class="c1">#</span>
+<span class="c1"># https://github.com/Robpol86/influxdb/blob/master/docs/_static/docker-email-logs.service</span>
+<span class="c1">#</span>
+<span class="c1"># Send an email every time any container exits with a non-zero exit code.</span>
+<span class="c1"># Includes containers started with --rm. Containers&#39; log-driver must be set to</span>
+<span class="c1"># journald.</span>
+<span class="c1">#</span>
+<span class="c1"># Save as: /etc/systemd/system/docker-email-logs.service</span>
+<span class="c1"># Enable with: systemctl enable docker-email-logs.service</span>
+
+<span class="k">[Unit]</span>
+<span class="na">After</span><span class="o">=</span><span class="s">docker.service</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Docker Non-Zero Email Logs</span>
+
+<span class="k">[Service]</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;FORMAT={{.ID}} {{.Actor.Attributes.name}} {{.From}} {{.Actor.Attributes.exitCode}}&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;RECIPIENT=root&quot;</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/bash -c &#39;</span>
+<span class="s">    docker events --filter &#39;event=die&#39; --format &quot;$FORMAT&quot; |</span>
+<span class="s">    while read cid name image ret; do</span>
+<span class="s">        [ &quot;$ret&quot; -eq &quot;0&quot; ] &amp;&amp; continue</span>
+<span class="s">        journalctl --since=&quot;2 hours ago&quot; CONTAINER_ID_FULL=$cid |</span>
+<span class="s">            mail -s &quot;$name ($image) failed with $ret&quot; $RECIPIENT</span>
+<span class="s">    done</span>
+<span class="na">&#39;</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </pre></div>
 </div>
+<p>Then run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo systemctl restart docker
+sudo systemctl start docker-email-logs.service
+sudo systemctl <span class="nb">enable</span> docker-email-logs.service
+sudo docker run --rm alpine:latest ls /tmp/does_not_exist.txt
+</pre></div>
+</div>
+<p>You should get an email after running the last command with the error output.</p>
 </div>
 </div>
 </div>
@@ -306,7 +343,7 @@ containers emailed to you. First create (or add to) <code class="docutils litera
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Apr 3, 2017, 8:45:40 PM UTC.
+      Last updated on Apr 3, 2017, 11:45:43 PM UTC.
 
     </p>
   </div>
