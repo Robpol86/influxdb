@@ -58,7 +58,7 @@ which is what I want. I installed Docker with these commands:
     sudo dnf makecache fast
     sudo dnf install docker-ce
     sudo systemctl start docker
-    sudo systemctl enable docker.service
+    sudo systemctl enable docker
     sudo docker run hello-world
 
 And I ran these commands to install Compose:
@@ -83,6 +83,34 @@ Turns out there was a race condition between NetworkManager waiting for DHCP and
 was too fast and tried to start containers before NetworkManager created the ``/etc/resolv.conf`` symlink. I fixed this
 by:
 
-1. Running ``sudo systemctl edit --full docker.service``
+1. Running ``sudo systemctl edit --full docker``
 2. Adding ``Wants=network-online.target`` to the Unit section.
 3. Replacing ``network.target`` with ``network-online.target`` in the Unit.After setting.
+
+Email Notifications
+-------------------
+
+If you've got email forwarding setup on the Docker host you may want to setup Docker to have logs of failed/dead
+containers emailed to you. First create (or add to) ``/etc/docker/daemon.json``:
+
+.. code-block:: json
+
+    {
+        "log-driver": "journald"
+    }
+
+Next install this systemd file:
+
+.. literalinclude:: _static/docker-email-logs.service
+    :language: ini
+
+Then run:
+
+.. code-block:: bash
+
+    sudo systemctl restart docker
+    sudo systemctl start docker-email-logs.service
+    sudo systemctl enable docker-email-logs.service
+    sudo docker run --rm alpine:latest ls /tmp/does_not_exist.txt
+
+You should get an email after running the last command with the error output.

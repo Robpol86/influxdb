@@ -1,0 +1,30 @@
+# Look for containers that exit non-zero and email logs.
+#
+# https://github.com/Robpol86/influxdb/blob/master/docs/_static/docker-email-logs.service
+#
+# Send an email every time any container exits with a non-zero exit code.
+# Includes containers started with --rm. Containers' log-driver must be set to
+# journald.
+#
+# Save as: /etc/systemd/system/docker-email-logs.service
+# Enable with: systemctl enable docker-email-logs.service
+
+[Unit]
+After=docker.service
+Description=Docker Non-Zero Email Logs
+
+[Service]
+Environment="FMT={{.ID}} {{.From}} {{with .Actor.Attributes}}{{.name}} {{.exitCode}}{{end}}"
+Environment="RECIPIENT=root"
+ExecStart=/bin/bash -c ' \
+    docker events --filter "event=die" --format "$FMT" | \
+    while read cid image name ret; do \
+        [ "$ret" -eq "0" ] && continue; \
+        journalctl --since="2 hours ago" CONTAINER_ID_FULL=$cid | \
+            mail -s "$name ($image) failed with $ret" $RECIPIENT; \
+    done \
+'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
