@@ -112,6 +112,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#ssl-certificate">SSL Certificate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#docker-and-compose">Docker and Compose</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#etc-resolv-conf-fix">/etc/resolv.conf Fix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#email-notifications">Email Notifications</a></li>
 </ul>
 </li>
 </ul>
@@ -236,7 +237,7 @@ sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/dock
 sudo dnf makecache fast
 sudo dnf install docker-ce
 sudo systemctl start docker
-sudo systemctl <span class="nb">enable</span> docker.service
+sudo systemctl <span class="nb">enable</span> docker
 sudo docker run hello-world
 </pre></div>
 </div>
@@ -257,10 +258,61 @@ started them. I was seeing this error:</p>
 was too fast and tried to start containers before NetworkManager created the <code class="docutils literal"><span class="pre">/etc/resolv.conf</span></code> symlink. I fixed this
 by:</p>
 <ol class="arabic simple">
-<li>Running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">edit</span> <span class="pre">--full</span> <span class="pre">docker.service</span></code></li>
+<li>Running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">edit</span> <span class="pre">--full</span> <span class="pre">docker</span></code></li>
 <li>Adding <code class="docutils literal"><span class="pre">Wants=network-online.target</span></code> to the Unit section.</li>
 <li>Replacing <code class="docutils literal"><span class="pre">network.target</span></code> with <code class="docutils literal"><span class="pre">network-online.target</span></code> in the Unit.After setting.</li>
 </ol>
+</div>
+<div class="section" id="email-notifications">
+<h3>Email Notifications<a class="headerlink" href="#email-notifications" title="Permalink to this headline">¶</a></h3>
+<p>If you&#8217;ve got email forwarding setup on the Docker host you may want to setup Docker to have logs of failed/dead
+containers emailed to you. First create (or add to) <code class="docutils literal"><span class="pre">/etc/docker/daemon.json</span></code>:</p>
+<div class="highlight-json"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;log-driver&quot;</span><span class="p">:</span> <span class="s2">&quot;journald&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Next install this systemd file:</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="c1"># Look for containers that exit non-zero and email logs.</span>
+<span class="c1">#</span>
+<span class="c1"># https://github.com/Robpol86/influxdb/blob/master/docs/_static/docker-email-logs.service</span>
+<span class="c1">#</span>
+<span class="c1"># Send an email every time any container exits with a non-zero exit code.</span>
+<span class="c1"># Includes containers started with --rm. Containers&#39; log-driver must be set to</span>
+<span class="c1"># journald.</span>
+<span class="c1">#</span>
+<span class="c1"># Save as: /etc/systemd/system/docker-email-logs.service</span>
+<span class="c1"># Enable with: systemctl enable docker-email-logs.service</span>
+
+<span class="k">[Unit]</span>
+<span class="na">After</span><span class="o">=</span><span class="s">docker.service</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Docker Non-Zero Email Logs</span>
+
+<span class="k">[Service]</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;FMT={{.ID}} {{.From}} {{with .Actor.Attributes}}{{.name}} {{.exitCode}}{{end}}&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;RECIPIENT=root&quot;</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/bash -c &#39; \</span>
+<span class="s">    docker events --filter &quot;event=die&quot; --format &quot;$FMT&quot; | \</span>
+<span class="s">    while read cid image name ret; do \</span>
+<span class="s">        [ &quot;$ret&quot; -eq &quot;0&quot; ] &amp;&amp; continue; \</span>
+<span class="s">        journalctl --since=&quot;2 hours ago&quot; CONTAINER_ID_FULL=$cid | \</span>
+<span class="s">            mail -s &quot;$name ($image) failed with $ret&quot; $RECIPIENT; \</span>
+<span class="s">    done \</span>
+<span class="na">&#39;</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</pre></div>
+</div>
+<p>Then run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo systemctl restart docker
+sudo systemctl start docker-email-logs.service
+sudo systemctl <span class="nb">enable</span> docker-email-logs.service
+sudo docker run --rm alpine:latest ls /tmp/does_not_exist.txt
+</pre></div>
+</div>
+<p>You should get an email after running the last command with the error output.</p>
 </div>
 </div>
 </div>
@@ -288,7 +340,7 @@ by:</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 13, 2017, 3:35:41 AM UTC.
+      Last updated on Apr 4, 2017, 12:22:13 AM UTC.
 
     </p>
   </div>
@@ -312,7 +364,6 @@ by:</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="stage/prepare.html">stage</a></dd>
             <dd><a href="master/prepare.html">master</a></dd>
         </dl>
     </div>
