@@ -2066,7 +2066,7 @@
                 "query": {
                   "params": [
                     "A",
-                    "5m",
+                    "15m",
                     "now"
                   ]
                 },
@@ -2089,7 +2089,7 @@
                 "query": {
                   "params": [
                     "B",
-                    "5m",
+                    "15m",
                     "now"
                   ]
                 },
@@ -2395,5 +2395,5 @@
   },
   "timezone": "browser",
   "title": "PiMon",
-  "version": 9
+  "version": 10
 }
