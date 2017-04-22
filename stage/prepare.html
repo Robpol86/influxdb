@@ -262,8 +262,7 @@ was too fast and tried to start containers before NetworkManager created the <co
 by:</p>
 <ol class="arabic simple">
 <li>Running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">edit</span> <span class="pre">--full</span> <span class="pre">docker</span></code></li>
-<li>Adding <code class="docutils literal"><span class="pre">Wants=network-online.target</span></code> to the Unit section.</li>
-<li>Replacing <code class="docutils literal"><span class="pre">network.target</span></code> with <code class="docutils literal"><span class="pre">network-online.target</span></code> in the Unit.After setting.</li>
+<li>Adding <code class="docutils literal"><span class="pre">ExecStartPre=/bin/bash</span> <span class="pre">-c</span> <span class="pre">'until</span> <span class="pre">[</span> <span class="pre">-s</span> <span class="pre">/etc/resolv.conf</span> <span class="pre">];</span> <span class="pre">do</span> <span class="pre">sleep</span> <span class="pre">1;</span> <span class="pre">done'</span></code> to the Service section.</li>
 </ol>
 </div>
 <div class="section" id="email-notifications">
@@ -343,7 +342,7 @@ sudo docker run --rm alpine:latest ls /tmp/does_not_exist.txt
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Apr 4, 2017, 12:22:13 AM UTC.
+      Last updated on Apr 22, 2017, 12:09:19 AM UTC.
 
     </p>
   </div>
