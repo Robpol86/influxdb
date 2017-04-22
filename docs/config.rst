@@ -38,19 +38,6 @@ Grafana
 .. image:: _static/grafana_email.png
     :target: _images/grafana_email.png
 
-1. Browse to https://filesrv.rob86.net:3000/profile (your Docker host's hostname).
-2. Login with admin/admin.
-3. Change the password, put your real email, and set any other settings desired.
-4. Browse to https://filesrv.rob86.net:3000/org and set name to "Home".
-5. Browse to https://filesrv.rob86.net:3000/datasources/new and set:
-
-    * Name: **telegraf**; Default: **✓**; Type: **InfluxDB**
-    * Url: **http://influxdb:8086**; Access: **proxy**
-    * Database: **telegraf**; User: **grafana**; Password: **REPLACE_ME**
-
-6. Browse to https://filesrv.rob86.net:3000/alerting/notification/new and send all alerts to your email address.
-7. Import dashboard JSONs from: https://github.com/Robpol86/influxdb/tree/master/grafana
-
 .. describe:: .secrets/grafana.ini
 
     Go to SparkPost and create a new API key with permissions **Send via SMTP** and **Templates: Read-only**. Then edit
@@ -66,6 +53,19 @@ Grafana
     .. code-block:: bash
 
         sudo docker restart grafana
+
+1. Browse to https://filesrv.rob86.net:3000/profile (your Docker host's hostname).
+2. Login with admin/admin.
+3. Change the password, put your real email, and set any other settings desired.
+4. Browse to https://filesrv.rob86.net:3000/org and set name to "Home".
+5. Browse to https://filesrv.rob86.net:3000/datasources/new and set:
+
+    * Name: **telegraf**; Default: **✓**; Type: **InfluxDB**
+    * Url: **http://influxdb:8086**; Access: **proxy**
+    * Database: **telegraf**; User: **grafana**; Password: **REPLACE_ME**
+
+6. Browse to https://filesrv.rob86.net:3000/alerting/notification/new and send all alerts to your email address.
+7. Import dashboard JSONs from: https://github.com/Robpol86/influxdb/tree/master/grafana
 
 PiMon
 =====

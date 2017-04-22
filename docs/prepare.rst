@@ -84,8 +84,7 @@ was too fast and tried to start containers before NetworkManager created the ``/
 by:
 
 1. Running ``sudo systemctl edit --full docker``
-2. Adding ``Wants=network-online.target`` to the Unit section.
-3. Replacing ``network.target`` with ``network-online.target`` in the Unit.After setting.
+2. Adding ``ExecStartPre=/bin/bash -c 'until [ -s /etc/resolv.conf ]; do sleep 1; done'`` to the Service section.
 
 Email Notifications
 -------------------
