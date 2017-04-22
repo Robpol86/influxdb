@@ -221,6 +221,21 @@ databases in the Docker containers.</p>
 <div class="section" id="grafana">
 <h2>Grafana<a class="headerlink" href="#grafana" title="Permalink to this headline">¶</a></h2>
 <a class="reference external image-reference" href="_images/grafana_email.png"><img alt="_images/grafana_email.png" src="_images/grafana_email.png" /></a>
+<dl class="describe">
+<dt>
+<code class="descname">.secrets/grafana.ini</code></dt>
+<dd><p>Go to SparkPost and create a new API key with permissions <strong>Send via SMTP</strong> and <strong>Templates: Read-only</strong>. Then edit
+this file with the following contents (replace <code class="docutils literal"><span class="pre">$API_KEY</span></code>, no need for quotes):</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="k">[smtp]</span>
+<span class="na">password</span> <span class="o">=</span> <span class="s">$API_KEY</span>
+</pre></div>
+</div>
+<p>Then restart the container:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart grafana
+</pre></div>
+</div>
+</dd></dl>
+
 <ol class="arabic">
 <li><p class="first">Browse to <a class="reference external" href="https://filesrv.rob86.net:3000/profile">https://filesrv.rob86.net:3000/profile</a> (your Docker host&#8217;s hostname).</p>
 </li>
@@ -244,21 +259,6 @@ databases in the Docker containers.</p>
 <li><p class="first">Import dashboard JSONs from: <a class="reference external" href="https://github.com/Robpol86/influxdb/tree/master/grafana">https://github.com/Robpol86/influxdb/tree/master/grafana</a></p>
 </li>
 </ol>
-<dl class="describe">
-<dt>
-<code class="descname">.secrets/grafana.ini</code></dt>
-<dd><p>Go to SparkPost and create a new API key with permissions <strong>Send via SMTP</strong> and <strong>Templates: Read-only</strong>. Then edit
-this file with the following contents (replace <code class="docutils literal"><span class="pre">$API_KEY</span></code>, no need for quotes):</p>
-<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="k">[smtp]</span>
-<span class="na">password</span> <span class="o">=</span> <span class="s">$API_KEY</span>
-</pre></div>
-</div>
-<p>Then restart the container:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart grafana
-</pre></div>
-</div>
-</dd></dl>
-
 </div>
 <div class="section" id="pimon">
 <h2>PiMon<a class="headerlink" href="#pimon" title="Permalink to this headline">¶</a></h2>
@@ -297,7 +297,7 @@ this file with the following contents (replace <code class="docutils literal"><s
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 26, 2017, 5:14:04 AM UTC.
+      Last updated on Apr 22, 2017, 12:16:24 AM UTC.
 
     </p>
   </div>
@@ -321,7 +321,6 @@ this file with the following contents (replace <code class="docutils literal"><s
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../stage/config.html">stage</a></dd>
             <dd><a href="config.html">master</a></dd>
         </dl>
     </div>
