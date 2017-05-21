@@ -116,7 +116,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
 </ul>
 
             
@@ -206,7 +205,7 @@ prepare your secrets by creating empty files with the right permissions:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo mkdir /opt/influxdb<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$_</span>
 sudo git clone https://github.com/Robpol86/influxdb.git .
 sudo mkdir -m0750 .secrets
-<span class="k">for</span> f in grafana.ini torrc ssh_config known_hosts pimon<span class="p">;</span> <span class="k">do</span>
+<span class="k">for</span> f in cronitor grafana.ini<span class="p">;</span> <span class="k">do</span>
     sudo touch .secrets/<span class="nv">$f</span><span class="p">;</span> sudo chmod <span class="m">0600</span> <span class="nv">$_</span>
 <span class="k">done</span>
 </pre></div>
@@ -275,9 +274,7 @@ sudo systemctl restart firewalld.service
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="cronitor2/install.html">cronitor2</a></dd>
             <dd><a href="master/install.html">master</a></dd>
-            <dd><a href="cronitor/install.html">cronitor</a></dd>
         </dl>
     </div>
 </div>

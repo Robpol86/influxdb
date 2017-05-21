@@ -111,7 +111,6 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
 </ul>
 
             
@@ -191,12 +190,11 @@ contains the following containers:</p>
 <ul class="simple">
 <li><a class="reference external" href="https://docs.influxdata.com/influxdb">InfluxDB</a> to store all of the metrics (the central piece of the setup).</li>
 <li><a class="reference external" href="http://grafana.org">Grafana</a> to show pretty graphs and email me alerts.</li>
-<li><a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">Raspberry Pi</a> or other Linux system for external monitoring.</li>
+<li><a class="reference external" href="https://cronitor.io">Cronitor</a> for external monitoring.</li>
 </ul>
 <p>I also use the following services:</p>
 <ul class="simple">
 <li><a class="reference external" href="https://www.sparkpost.com/pricing">SparkPost</a> free tier for sending alerts emails.</li>
-<li><a class="reference external" href="https://www.torproject.org">Tor</a> for our external Linux system to get around NAT/Firewalls.</li>
 </ul>
 <p>This website is my brain dump on how I got monitoring and alerting setup on my
 <a class="reference external" href="https://robpol86.com/my_awesome_server.html">home server</a> from scratch. If you plan on using it for your server
@@ -221,7 +219,7 @@ you&#8217;ll need to be on the lookout for my hostnames and IP addresses and sub
 <li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="config.html#influxdb">InfluxDB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config.html#grafana">Grafana</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config.html#pimon">PiMon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config.html#cronitor">Cronitor</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a><ul>
@@ -229,22 +227,6 @@ you&#8217;ll need to be on the lookout for my hostnames and IP addresses and sub
 <li class="toctree-l2"><a class="reference internal" href="telegraf.html#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telegraf.html#tweak-and-verify">Tweak and Verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="telegraf.html#getsockopt-connection-refused-fix">getsockopt: Connection Refused Fix</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#preparing-the-pi">Preparing the Pi</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#install-software">Install Software</a></li>
-<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#hardening-the-pi">Hardening the Pi</a></li>
-<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#setup-email">Setup Email</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#configure-cellular-modem">Configure Cellular Modem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#install-and-configure-tor">Install and Configure Tor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="raspberrypi.html#verifying">Verifying</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#update-container-config">Update Container Config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raspberrypi.html#references">References</a></li>
 </ul>
 </li>
 </ul>
@@ -272,7 +254,7 @@ you&#8217;ll need to be on the lookout for my hostnames and IP addresses and sub
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Mar 25, 2017, 12:02:40 AM UTC.
+      Last updated on May 21, 2017, 10:56:37 PM UTC.
 
     </p>
   </div>
@@ -296,9 +278,7 @@ you&#8217;ll need to be on the lookout for my hostnames and IP addresses and sub
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../cronitor2/index.html">cronitor2</a></dd>
             <dd><a href="index.html">master</a></dd>
-            <dd><a href="../cronitor/index.html">cronitor</a></dd>
         </dl>
     </div>
 </div>
