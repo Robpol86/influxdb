@@ -3,3 +3,41 @@ version: 2
 branches:
   ignore:
     - gh-pages
+
+jobs:
+  build:
+    machine: true
+    working_directory: ~/project
+
+    steps:
+      - checkout
+
+      - run:
+          name: Update Docker
+          background: true
+          command: |
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg |sudo apt-key add -
+            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+            sudo apt-get update
+            sudo apt-get install -y docker-ce
+
+      - run:
+          name: Install Test Dependencies
+          command: |
+            pyenv install 3.6.1 && pyenv local $_
+            pip install -r docs/requirements.txt docker-compose
+            while ps ux |grep -v grep |grep 'bash.*apt-get'; do sleep 2; done
+
+      - run:
+          name: Verify docker-compose.yml
+          command: |
+            docker-compose config
+
+      - deploy:
+          name: Build and Upload Docs
+          command: |
+            sphinx-build -W docs docs/_build/html
+            git config --global user.email "builds@circleci.com"
+            git config --global user.name "CircleCI"
+            export ${!CIRCLE*}
+            sphinx-versioning push docs gh-pages .
