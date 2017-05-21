@@ -16,10 +16,10 @@ contains the following containers:
 
 * `InfluxDB <https://docs.influxdata.com/influxdb>`_ to store all of the metrics (the central piece of the setup).
 * `Grafana <http://grafana.org>`_ to show pretty graphs and email me alerts.
-* `Cronitor <https://cronitor.io>`_ for external monitoring.
 
 I also use the following services:
 
+* `Cronitor <https://cronitor.io>`_ for external monitoring.
 * `SparkPost <https://www.sparkpost.com/pricing>`_ free tier for sending alerts emails.
 
 .. summary-section-end
