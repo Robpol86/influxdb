@@ -20,8 +20,6 @@ InfluxDB
     CREATE DATABASE telegraf
     CREATE USER telegraf_filesrv WITH PASSWORD 'REPLACE_ME'
     GRANT ALL TO telegraf_filesrv
-    CREATE USER telegraf_raspberrypi WITH PASSWORD 'REPLACE_ME'
-    GRANT ALL TO telegraf_raspberrypi
     CREATE USER telegraf_bosco WITH PASSWORD 'REPLACE_ME'
     GRANT WRITE ON telegraf TO telegraf_bosco
     CREATE USER grafana WITH PASSWORD 'REPLACE_ME'
@@ -67,13 +65,26 @@ Grafana
 6. Browse to https://filesrv.rob86.net:3000/alerting/notification/new and send all alerts to your email address.
 7. Import dashboard JSONs from: https://github.com/Robpol86/influxdb/tree/master/grafana
 
-PiMon
-=====
+Cronitor
+========
 
-.. describe:: .secrets/pimon
+.. describe:: .secrets/cronitor
 
-    Create an SSH key pair to be used to SSH into the Raspberry Pi from the PiMon docker container:
+    What if my server hangs or goes down when I'm not directly using it? All of this monitoring software I'm setting up
+    won't notify me when my server is unresponsive. Luckily there's a service out there with a free tier that solves
+    this problem: `Cronitor <https://cronitor.io>`_
+
+    Go to your Cronitor dashboard and find your "Unique Ping URL". Get the **URL ID** from the url (e.g. ``aBc123`` in
+    ``https://cronitor.link/aBc123/{ENDPOINT}``) and its **auth_key**. Then edit this file adding those two strings in
+    their own lines (file will consist of just two lines):
+
+    .. code-block:: text
+
+        aBc123
+        1a329a5f1456789a1bc1d08764c2f3ae
+
+    Then restart the container:
 
     .. code-block:: bash
 
-        sudo ssh-keygen -t rsa -b 4096 -C "$HOSTNAME" -N "" -f .secrets/pimon
+        sudo docker restart cronitor

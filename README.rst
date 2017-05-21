@@ -1,9 +1,9 @@
-===============================
-InfluxDB, Grafana, Raspberry Pi
-===============================
+===========================
+InfluxDB, Grafana, Cronitor
+===========================
 
-.. image:: https://img.shields.io/travis/Robpol86/influxdb/master.svg?style=flat-square&label=Travis%20CI
-    :target: https://travis-ci.org/Robpol86/influxdb
+.. image:: https://img.shields.io/circleci/project/github/Robpol86/influxdb/master.svg?style=flat-square&label=CircleCI
+    :target: https://circleci.com/gh/Robpol86/influxdb
     :alt: Build Status
 
 .. image:: docs/_static/grafana_filesrv.png
@@ -16,12 +16,11 @@ contains the following containers:
 
 * `InfluxDB <https://docs.influxdata.com/influxdb>`_ to store all of the metrics (the central piece of the setup).
 * `Grafana <http://grafana.org>`_ to show pretty graphs and email me alerts.
-* `Raspberry Pi <https://robpol86.com/raspberry_pi_project_fi.html>`_ or other Linux system for external monitoring.
+* `Cronitor <https://cronitor.io>`_ for external monitoring.
 
 I also use the following services:
 
 * `SparkPost <https://www.sparkpost.com/pricing>`_ free tier for sending alerts emails.
-* `Tor <https://www.torproject.org>`_ for our external Linux system to get around NAT/Firewalls.
 
 .. summary-section-end
 
@@ -45,7 +44,7 @@ prepare your secrets by creating empty files with the right permissions:
     sudo mkdir /opt/influxdb; cd $_
     sudo git clone https://github.com/Robpol86/influxdb.git .
     sudo mkdir -m0750 .secrets
-    for f in grafana.ini torrc ssh_config known_hosts pimon; do
+    for f in cronitor grafana.ini; do
         sudo touch .secrets/$f; sudo chmod 0600 $_
     done
 

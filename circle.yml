@@ -25,9 +25,10 @@ jobs:
             while ps ux |grep -v grep |grep 'bash.*apt-get'; do sleep 2; done
 
       - run:
-          name: Verify docker-compose.yml
+          name: Verify Docker Files
           command: |
             docker-compose config
+            docker build cronitor
 
       - deploy:
           name: Build and Upload Docs

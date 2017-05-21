@@ -36,15 +36,12 @@ services:
     secrets: [grafana]
     volumes: ['/storage/Local/grafana:/var/lib/grafana']
 
-  pimon:
-    build: ./pimon
-    container_name: pimon
+  cronitor:
+    build: ./cronitor
+    container_name: cronitor
     restart: always
-    secrets: [known_hosts, pimon, ssh_config, torrc]
+    secrets: [cronitor]
 
 secrets:
+  cronitor: {file: .secrets/cronitor}
   grafana: {file: .secrets/grafana.ini}
-  known_hosts: {file: .secrets/known_hosts}
-  pimon: {file: .secrets/pimon}
-  ssh_config: {file: .secrets/ssh_config}
-  torrc: {file: .secrets/torrc}

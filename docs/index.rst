@@ -21,4 +21,3 @@ you'll need to be on the lookout for my hostnames and IP addresses and substitut
     install
     config
     telegraf
-    raspberrypi
