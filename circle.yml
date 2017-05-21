@@ -1,0 +1,5 @@
+version: 2
+
+branches:
+  ignore:
+    - gh-pages
