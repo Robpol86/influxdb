@@ -43,7 +43,7 @@ googleanalytics_id = 'UA-82627369-1'
 
 # SCVersioning.
 scv_banner_greatest_tag = True
-scv_grm_exclude = ('.gitignore', '.nojekyll', 'README.rst')
+scv_grm_exclude = ('.gitignore', '.nojekyll', 'circle.yml', 'README.rst')
 scv_overflow = ('-W',)
 scv_show_banner = True
 scv_sort = ('semver', 'time')

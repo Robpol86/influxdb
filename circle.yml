@@ -1,8 +1,5 @@
 version: 2
 
-branches:
-  ignore: [gh-pages]
-
 jobs:
   build:
     machine: true
