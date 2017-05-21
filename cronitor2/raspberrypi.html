@@ -1,0 +1,486 @@
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-82627369-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Raspberry Pi Watchdog &mdash; InfluxDB Home Monitoring</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="InfluxDB Home Monitoring" href="index.html"/>
+        <link rel="prev" title="Telegraf on the Server" href="telegraf.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> InfluxDB Home Monitoring
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="prepare.html">Preparing the Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing this Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Initial Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Raspberry Pi Watchdog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-the-pi">Preparing the Pi</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-software">Install Software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardening-the-pi">Hardening the Pi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-email">Setup Email</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-cellular-modem">Configure Cellular Modem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-and-configure-tor">Install and Configure Tor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#verifying">Verifying</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#update-container-config">Update Container Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">InfluxDB Home Monitoring</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Raspberry Pi Watchdog</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/robpol86/InfluxDB Home Monitoring/blob/cronitor2/docs/raspberrypi.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../master/raspberrypi.html"><b>Warning:</b> This document is for the development version of InfluxDB Home Monitoring. The main version is master.</a></p>
+<div class="section" id="raspberry-pi-watchdog">
+<span id="raspberrypi"></span><h1>Raspberry Pi Watchdog<a class="headerlink" href="#raspberry-pi-watchdog" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="_images/pimon.jpg"><img alt="_images/pimon.jpg" src="_images/pimon.jpg" /></a>
+<p>What if my server hangs or goes down when I&#8217;m not directly using it? All of this monitoring software I&#8217;m setting up
+won&#8217;t notify me when my server is unresponsive. My solution to this problem is a dedicated <a class="reference external" href="https://www.raspberrypi.org/products/">Raspberry Pi</a> with a
+<a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">cellular connection</a> on a <a class="reference external" href="https://www.amazon.com/APC-Back-UPS-Battery-Protector-BE425M/dp/B01HDC236Q/">UPS</a>. However these instructions should work on any Linux computer with a network
+connection of any type.</p>
+<div class="section" id="preparing-the-pi">
+<h2>Preparing the Pi<a class="headerlink" href="#preparing-the-pi" title="Permalink to this headline">¶</a></h2>
+<p>Before setting up the cellular modem (we don&#8217;t want these apt-get commands run over cellular which is very slow) I&#8217;ll
+install required software and configure the system.</p>
+<ol class="arabic simple">
+<li>Setup a <a class="reference external" href="https://gist.github.com/Robpol86/3d4730818816f866452e">newly installed</a> Raspbian system.</li>
+<li>Don&#8217;t forget to change hostname.</li>
+</ol>
+<div class="section" id="install-software">
+<h3>Install Software<a class="headerlink" href="#install-software" title="Permalink to this headline">¶</a></h3>
+<p>My server will SSH into the Raspberry Pi with an SSH tunnel opened back to my InfluxDB database. It will try to maintain
+this connection indefinitely. For this to work I first need to setup Telegraf and other files on the Pi.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo tee /etc/apt/sources.list.d/influx.list <span class="o">&lt;&lt;&lt;</span> <span class="s1">&#39;deb https://repos.influxdata.com/debian jessie stable&#39;</span>
+curl -sL https://repos.influxdata.com/influxdb.key <span class="p">|</span>sudo apt-key add -
+sudo apt-get update
+sudo apt-get install telegraf
+<span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/etc/telegraf_rpi.conf
+curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /etc/telegraf/telegraf.conf
+sudo chmod <span class="m">0600</span> /etc/telegraf/telegraf.conf<span class="p">;</span> sudo chown telegraf <span class="nv">$_</span>
+<span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/cpu_temp.awk
+curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/cpu_temp
+<span class="nv">url</span><span class="o">=</span>https://raw.githubusercontent.com/Robpol86/influxdb/master/bin/mia.sh
+curl -s <span class="nv">$url</span> <span class="p">|</span>sudo tee /usr/local/bin/mia
+sudo chmod +x /usr/local/bin/<span class="o">{</span>cpu_temp,mia<span class="o">}</span>
+sudo -u telegraf telegraf -test
+sudo systemctl start telegraf.service
+</pre></div>
+</div>
+</div>
+<div class="section" id="hardening-the-pi">
+<h3>Hardening the Pi<a class="headerlink" href="#hardening-the-pi" title="Permalink to this headline">¶</a></h3>
+<p>Before exposing the Pi to Tor it&#8217;s a good idea to lock it down. Remember to <strong>enable the SSH server</strong> on the Pi. Edit
+<code class="docutils literal"><span class="pre">/etc/ssh/sshd_config</span></code>:</p>
+<div class="highlight-apacheconf"><div class="highlight"><pre><span></span><span class="nb">PasswordAuthentication</span> no
+<span class="nb">PermitRootLogin</span> no
+</pre></div>
+</div>
+<p>Generate SSH keys for the <code class="docutils literal"><span class="pre">pi</span></code> user (for maintenance, not for Server, that&#8217;s next) and run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkdir -m0700 .ssh<span class="p">;</span> <span class="o">(</span><span class="nb">umask</span> <span class="m">0077</span><span class="p">;</span> cat &gt;&gt; .ssh/authorized_keys<span class="o">)</span>  <span class="c1"># Run as pi user.</span>
+sudo service ssh restart
+sudo sed -i <span class="s1">&#39;s/NOPASSWD: //g&#39;</span> /etc/sudoers.d/010_pi-nopasswd
+</pre></div>
+</div>
+<p>Next get the contents of <code class="docutils literal"><span class="pre">.secrets/pimon.pub</span></code> you generated back in the <a class="reference internal" href="config.html#pimon"><span class="std std-ref">PiMon</span></a> section and run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo useradd -mp <span class="k">$(</span>openssl rand -base64 <span class="m">20</span><span class="k">)</span> server<span class="p">;</span> sudo -i -u <span class="nv">$_</span> mkdir -m0700 .ssh
+sudo -i -u server bash -c <span class="s1">&#39;umask 0077; cat &gt;&gt; .ssh/authorized_keys&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-email">
+<h3>Setup Email<a class="headerlink" href="#setup-email" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install postfix bsd-mailx
+sudo cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf
+</pre></div>
+</div>
+<p>Then edit <code class="docutils literal"><span class="pre">/etc/postfix/main.cf</span></code> with the following. Replace <code class="docutils literal"><span class="pre">$API_KEY</span></code> and <code class="docutils literal"><span class="pre">$SENDING_DOMAIN</span></code>.</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="na">smtp_sasl_auth_enable</span> <span class="o">=</span> <span class="s">yes</span>
+<span class="na">smtp_sasl_password_maps</span> <span class="o">=</span> <span class="s">static:SMTP_Injection:$API_KEY</span>
+<span class="na">relayhost</span> <span class="o">=</span> <span class="s">[smtp.sparkpostmail.com]:587</span>
+<span class="na">smtp_sasl_security_options</span> <span class="o">=</span> <span class="s">noanonymous</span>
+<span class="na">smtp_tls_security_level</span> <span class="o">=</span> <span class="s">encrypt</span>
+<span class="na">header_size_limit</span> <span class="o">=</span> <span class="s">4096000</span>
+<span class="na">myorigin</span> <span class="o">=</span> <span class="s">$SENDING_DOMAIN.com</span>
+<span class="na">mydestination</span> <span class="o">=</span> <span class="s">$SENDING_DOMAIN.com $myhostname localhost.$mydomain localhost</span>
+</pre></div>
+</div>
+<p>Then run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="k">for</span> u in pi root server<span class="p">;</span> <span class="k">do</span> sudo tee -a /etc/aliases <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;</span><span class="nv">$u</span><span class="s2">: </span><span class="nv">$YOU</span><span class="s2">@gmail.com&quot;</span><span class="p">;</span> <span class="k">done</span>
+sudo newaliases
+sudo systemctl start postfix.service
+sudo systemctl <span class="nb">enable</span> postfix.service
+mail -s <span class="s2">&quot;Test Email </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> <span class="nv">$YOU</span>@gmail.com <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email for Pi </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> pi <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email for Root </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> root <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+mail -s <span class="s2">&quot;Test Email for Server </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> server <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;This is a test email.&quot;</span>
+</pre></div>
+</div>
+<p>You should receive four emails in your personal email account. If not make sure the numbers in your SparkPost&#8217;s
+dashboard&#8217;s usage report have increased.</p>
+<p>Add these to the <strong>root</strong> crontab. The email configuration from above will take care of forwarding root emails to my
+real email address.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>@hourly journalctl --since<span class="o">=</span><span class="s2">&quot;1 hour ago&quot;</span> --priority<span class="o">=</span>err --quiet
+*/10 * * * * /usr/local/bin/mia server <span class="m">5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="configure-cellular-modem">
+<h2>Configure Cellular Modem<a class="headerlink" href="#configure-cellular-modem" title="Permalink to this headline">¶</a></h2>
+<p>I then setup my modem following this guide: <a class="reference external" href="https://robpol86.com/raspberry_pi_project_fi.html">https://robpol86.com/raspberry_pi_project_fi.html</a></p>
+<p>Once done down the interface so apt-get commands don&#8217;t run over cellular and waste time and data:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo ifdown wwan0
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-and-configure-tor">
+<h2>Install and Configure Tor<a class="headerlink" href="#install-and-configure-tor" title="Permalink to this headline">¶</a></h2>
+<p>Since my Pi will be on a cellular connection my server won&#8217;t be able to SSH into it (can&#8217;t open ports). I also don&#8217;t
+want my Pi SSHing into my server since if I end up relocating the Pi outside of my home it can get stolen and the crook
+will have SSH access to my server.</p>
+<p>The solution is to put the Raspberry Pi&#8217;s SSH server behind a <a class="reference external" href="https://www.torproject.org/docs/tor-hidden-service.html">Tor hidden service</a>. My server will periodically SSH
+into my Raspberry Pi to collect some metrics (and alert me if the Pi is unavailable) and the Raspberry Pi will have a
+cron job that sends out an email if my server hasn&#8217;t logged in for a while.</p>
+<p>First install Tor:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install tor
+sudo mkdir -m0700 /var/lib/tor/sshd/<span class="p">;</span> sudo chown debian-tor.debian-tor <span class="nv">$_</span>
+</pre></div>
+</div>
+<p>Add this to <code class="docutils literal"><span class="pre">/etc/tor/torrc</span></code>:</p>
+<div class="highlight-apacheconf"><div class="highlight"><pre><span></span><span class="nb">HiddenServiceDir</span> <span class="sx">/var/lib/tor/sshd/</span>
+<span class="nb">HiddenServicePort</span> <span class="m">22</span> <span class="m">127.0.0.1</span>:22
+<span class="nb">HiddenServiceAuthorizeClient</span> stealth Server
+</pre></div>
+</div>
+<p>Start the service:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo systemctl start tor
+sudo systemctl <span class="nb">enable</span> tor
+sudo cat /var/lib/tor/sshd/hostname  <span class="c1"># Write down the output.</span>
+ssh-keyscan -t ecdsa-sha2-nistp256 localhost  <span class="c1"># Write down output.</span>
+</pre></div>
+</div>
+<p>If you don&#8217;t have a <code class="docutils literal"><span class="pre">hostname</span></code> file in that directory try running <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">restart</span> <span class="pre">tor</span></code> and tail
+<code class="docutils literal"><span class="pre">/var/log/tor/log</span></code> for any errors.</p>
+<div class="section" id="verifying">
+<h3>Verifying<a class="headerlink" href="#verifying" title="Permalink to this headline">¶</a></h3>
+<p>If you want to verify SSH is working over cellular and Tor you can install Tor on your client machine and attempt to SSH
+in:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Fedora:</span>
+sudo dnf install tor socat
+<span class="c1"># Add this to /etc/tor/torrc:</span>
+sudo tee /etc/tor/torrc <span class="o">&lt;&lt;&lt;</span> <span class="s2">&quot;HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB&quot;</span>
+sudo systemctl start tor
+ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
+<span class="c1"># OS X:</span>
+brew install tor socat
+<span class="nb">echo</span> <span class="s1">&#39;HidServAuth gv3x4yxk7lcizd6q.onion hNm5BgqGrjz+a2Pdjri7mB&#39;</span> &gt; /usr/local/etc/tor/torrc
+tor <span class="p">&amp;</span>
+ssh -oProxyCommand<span class="o">=</span><span class="s1">&#39;socat - SOCKS4A:localhost:%h:%p,socksport=9050&#39;</span> pi@gv3x4yxk7lcizd6q.onion
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="update-container-config">
+<h2>Update Container Config<a class="headerlink" href="#update-container-config" title="Permalink to this headline">¶</a></h2>
+<p>Finally it&#8217;s time to tell the <code class="docutils literal"><span class="pre">pimon</span></code> container the onion addresses and host key to use. The container should be
+currently running since earlier in the <a class="reference internal" href="install.html#start-containers"><span class="std std-ref">Start Containers</span></a> section all containers were started.</p>
+<dl class="describe">
+<dt>
+<code class="descname">.secrets/torrc</code></dt>
+<dd><p>Use the output of the <code class="docutils literal"><span class="pre">cat</span> <span class="pre">/var/lib/tor/sshd/hostname</span></code> command from the Raspberry Pi.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>HidServAuth REPLACE_ME.onion ALSO_REPLACE_ME # client: Server
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<code class="descname">.secrets/ssh_config</code></dt>
+<dd><p>Use the hostname specified in the output of the <code class="docutils literal"><span class="pre">cat</span> <span class="pre">/var/lib/tor/sshd/hostname</span></code> command from the Raspberry Pi.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>Host raspberrypi
+  HostName REPLACE_ME.onion
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<code class="descname">.secrets/known_hosts</code></dt>
+<dd><p>Use the value from the <code class="docutils literal"><span class="pre">ssh-keyscan</span></code> command run on the Raspberry Pi. <strong>Don&#8217;t forget</strong> to replace <code class="docutils literal"><span class="pre">localhost</span></code>
+with the onion hostname used in the other files.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>REPLACE_ME.onion ecdsa-sha2-nistp256 AAAAE2...HY0NcRAX37Yk2oie7l8kcY77EhqQ=
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Then restart the <code class="docutils literal"><span class="pre">pimon</span></code> container and look at the logs:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart pimon
+sudo docker logs pimon --follow
+</pre></div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://gk2.sk/running-ssh-on-a-raspberry-pi-as-a-hidden-service-with-tor/">http://gk2.sk/running-ssh-on-a-raspberry-pi-as-a-hidden-service-with-tor/</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="telegraf.html" class="btn btn-neutral" title="Telegraf on the Server" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, @Robpol86.
+      Last updated on Mar 25, 2017, 12:02:40 AM UTC.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: cronitor2
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="raspberrypi.html">cronitor2</a></dd>
+            <dd><a href="../master/raspberrypi.html">master</a></dd>
+            <dd><a href="../cronitor/raspberrypi.html">cronitor</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
