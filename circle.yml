@@ -1,2 +1,3 @@
-branches:
-  ignore: [gh-pages]
+jobs:
+  branches:
+    ignore: [gh-pages]
