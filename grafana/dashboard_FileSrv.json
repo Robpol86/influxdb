@@ -178,7 +178,7 @@
               {
                 "evaluator": {
                   "params": [
-                    140
+                    130
                   ],
                   "type": "gt"
                 },
@@ -344,7 +344,7 @@
               "fill": true,
               "line": true,
               "op": "gt",
-              "value": 140
+              "value": 130
             }
           ],
           "timeFrom": null,
@@ -470,6 +470,29 @@
                   "type": "max"
                 },
                 "type": "query"
+              },
+              {
+                "evaluator": {
+                  "params": [
+                    180
+                  ],
+                  "type": "gt"
+                },
+                "operator": {
+                  "type": "or"
+                },
+                "query": {
+                  "params": [
+                    "B",
+                    "5m",
+                    "now"
+                  ]
+                },
+                "reducer": {
+                  "params": [],
+                  "type": "max"
+                },
+                "type": "query"
               }
             ],
             "executionErrorState": "keep_state",
@@ -572,6 +595,75 @@
                   "key": "name",
                   "operator": "=~",
                   "value": "/_temp$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "name",
+                  "operator": "!=",
+                  "value": "mb_10g_temp"
+                }
+              ]
+            },
+            {
+              "alias": "$tag_name",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "$interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "name"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "previous"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "ipmi_sensor",
+              "policy": "default",
+              "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
+              "rawQuery": false,
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "max"
+                  },
+                  {
+                    "params": [
+                      "* 9/5 + 32"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "filesrv.rob86.net"
+                },
+                {
+                  "condition": "AND",
+                  "key": "name",
+                  "operator": "=",
+                  "value": "mb_10g_temp"
                 }
               ]
             }
@@ -2875,5 +2967,5 @@
   },
   "timezone": "browser",
   "title": "FileSrv",
-  "version": 75
+  "version": 7
 }
