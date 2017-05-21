@@ -117,7 +117,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="raspberrypi.html">Raspberry Pi Watchdog</a></li>
 </ul>
 
             
@@ -266,7 +265,10 @@ this file with the following contents (replace <code class="docutils literal"><s
 <dl class="describe">
 <dt>
 <code class="descname">.secrets/cronitor</code></dt>
-<dd><p>Go to your Cronitor dashboard for your <strong>URL ID</strong> (e.g. <code class="docutils literal"><span class="pre">aBc123</span></code> in <code class="docutils literal"><span class="pre">https://cronitor.link/aBc123/{ENDPOINT}</span></code>)
+<dd><p>What if my server hangs or goes down when I&#8217;m not directly using it? All of this monitoring software I&#8217;m setting up
+won&#8217;t notify me when my server is unresponsive. Luckily there&#8217;s a service out there with a free tier that solves
+this problem: <a class="reference external" href="https://cronitor.io">Cronitor</a></p>
+<p>Go to your Cronitor dashboard for your <strong>URL ID</strong> (e.g. <code class="docutils literal"><span class="pre">aBc123</span></code> in <code class="docutils literal"><span class="pre">https://cronitor.link/aBc123/{ENDPOINT}</span></code>)
 and its <strong>auth_key</strong>. Then edit this file  adding those two strings in their own lines (file will consist of just
 two lines):</p>
 <div class="highlight-text"><div class="highlight"><pre><span></span>aBc123
@@ -305,7 +307,7 @@ two lines):</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on May 21, 2017, 10:09:32 PM UTC.
+      Last updated on May 21, 2017, 10:21:37 PM UTC.
 
     </p>
   </div>
