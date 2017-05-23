@@ -234,7 +234,7 @@ by everyone so I chmodded it to 444 afterwards.</p>
 <p>There are two ways to install Docker and Docker Compose on Fedora. You can just <code class="docutils literal"><span class="pre">dnf</span></code> install the versions shipped by
 the OS but this isn&#8217;t the &#8220;real&#8221; Docker (that&#8217;s what I was told when I interviewed there :P). It&#8217;s also not the latest,
 which is what I want. I installed Docker with these commands:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf -y remove docker docker-common container-selinux docker-selinux
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf remove docker docker-common container-selinux docker-selinux
 sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 sudo dnf makecache fast
 sudo dnf install docker-ce
@@ -341,7 +341,7 @@ sudo docker run --rm alpine:latest ls /tmp/does_not_exist.txt
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on Apr 22, 2017, 12:16:24 AM UTC.
+      Last updated on May 23, 2017, 2:52:18 PM UTC.
 
     </p>
   </div>
