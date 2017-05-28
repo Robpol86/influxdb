@@ -188,12 +188,13 @@
 <p>This is the <a class="reference external" href="https://docs.docker.com/compose">docker-compose</a> stack I use for my home network&#8217;s monitoring. It
 contains the following containers:</p>
 <ul class="simple">
+<li><a class="reference external" href="https://www.nginx.com/">NGINX</a> SSL termination for InfluxDB and Grafana traffic outside of Docker containers.</li>
 <li><a class="reference external" href="https://docs.influxdata.com/influxdb">InfluxDB</a> to store all of the metrics (the central piece of the setup).</li>
 <li><a class="reference external" href="http://grafana.org">Grafana</a> to show pretty graphs and email me alerts.</li>
+<li><a class="reference external" href="https://cronitor.io">Cronitor</a> for external monitoring of my Docker host and home network.</li>
 </ul>
 <p>I also use the following services:</p>
 <ul class="simple">
-<li><a class="reference external" href="https://cronitor.io">Cronitor</a> for external monitoring.</li>
 <li><a class="reference external" href="https://www.sparkpost.com/pricing">SparkPost</a> free tier for sending alerts emails.</li>
 </ul>
 <p>This website is my brain dump on how I got monitoring and alerting setup on my
@@ -278,8 +279,8 @@ you&#8217;ll need to be on the lookout for my hostnames and IP addresses and sub
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="nmc_snmp/index.html">nmc_snmp</a></dd>
             <dd><a href="master/index.html">master</a></dd>
+            <dd><a href="nmc_snmp/index.html">nmc_snmp</a></dd>
         </dl>
     </div>
 </div>
