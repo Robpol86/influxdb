@@ -53,7 +53,7 @@ which is what I want. I installed Docker with these commands:
 
 .. code-block:: bash
 
-    sudo dnf -y remove docker docker-common container-selinux docker-selinux
+    sudo dnf remove docker docker-common container-selinux docker-selinux
     sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
     sudo dnf makecache fast
     sudo dnf install docker-ce

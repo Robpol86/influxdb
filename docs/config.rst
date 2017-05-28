@@ -68,11 +68,11 @@ Grafana
 Cronitor
 ========
 
-.. describe:: .secrets/cronitor
+What if my server hangs or goes down when I'm not directly using it? All of this monitoring software I'm setting up
+won't notify me when my server is unresponsive. Luckily there's a service out there with a free tier that solves this
+problem: `Cronitor <https://cronitor.io>`_
 
-    What if my server hangs or goes down when I'm not directly using it? All of this monitoring software I'm setting up
-    won't notify me when my server is unresponsive. Luckily there's a service out there with a free tier that solves
-    this problem: `Cronitor <https://cronitor.io>`_
+.. describe:: .secrets/cronitor
 
     Go to your Cronitor dashboard and find your "Unique Ping URL". Get the **URL ID** from the url (e.g. ``aBc123`` in
     ``https://cronitor.link/aBc123/{ENDPOINT}``) and its **auth_key**. Then edit this file adding those two strings in

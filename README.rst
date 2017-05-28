@@ -14,12 +14,13 @@ InfluxDB, Grafana, Cronitor
 This is the `docker-compose <https://docs.docker.com/compose>`_ stack I use for my home network's monitoring. It
 contains the following containers:
 
+* `NGINX <https://www.nginx.com/>`_ SSL termination for InfluxDB and Grafana traffic outside of Docker containers.
 * `InfluxDB <https://docs.influxdata.com/influxdb>`_ to store all of the metrics (the central piece of the setup).
 * `Grafana <http://grafana.org>`_ to show pretty graphs and email me alerts.
+* `Cronitor <https://cronitor.io>`_ for external monitoring of my Docker host and home network.
 
 I also use the following services:
 
-* `Cronitor <https://cronitor.io>`_ for external monitoring.
 * `SparkPost <https://www.sparkpost.com/pricing>`_ free tier for sending alerts emails.
 
 .. summary-section-end

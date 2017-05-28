@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "4.2.0"
+      "version": "4.3.0-beta1"
     },
     {
       "type": "panel",
@@ -103,6 +103,7 @@
             "lineColor": "rgb(31, 120, 193)",
             "show": false
           },
+          "tableColumn": "",
           "targets": [
             {
               "dsType": "influxdb",
@@ -258,6 +259,8 @@
           },
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "fill": 1,
           "id": 1,
@@ -284,7 +287,8 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 4,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -357,6 +361,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -387,7 +392,198 @@
               {
                 "evaluator": {
                   "params": [
-                    150
+                    140
+                  ],
+                  "type": "gt"
+                },
+                "operator": {
+                  "type": "and"
+                },
+                "query": {
+                  "params": [
+                    "A",
+                    "5m",
+                    "now"
+                  ]
+                },
+                "reducer": {
+                  "params": [],
+                  "type": "max"
+                },
+                "type": "query"
+              }
+            ],
+            "executionErrorState": "alerting",
+            "frequency": "60s",
+            "handler": 1,
+            "name": "System Low Temp alert",
+            "noDataState": "no_data",
+            "notifications": []
+          },
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_TELEGRAF}",
+          "decimals": 0,
+          "fill": 1,
+          "id": 19,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
+            "min": true,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 4,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "$tag_name",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "$interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "name"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "previous"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "ipmi_sensor",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
+              "rawQuery": false,
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "max"
+                  },
+                  {
+                    "params": [
+                      "* 9/5 + 32"
+                    ],
+                    "type": "math"
+                  }
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "host",
+                  "operator": "=",
+                  "value": "filesrv.rob86.net"
+                },
+                {
+                  "condition": "AND",
+                  "key": "name",
+                  "operator": "=~",
+                  "value": "/_temp$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "name",
+                  "operator": "!=",
+                  "value": "mb_10g_temp"
+                },
+                {
+                  "condition": "AND",
+                  "key": "name",
+                  "operator": "!=",
+                  "value": "cpu_temp"
+                }
+              ]
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": "gt",
+              "value": 140
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "System Low Temp",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "farenheit",
+              "label": "",
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ]
+        },
+        {
+          "alert": {
+            "conditions": [
+              {
+                "evaluator": {
+                  "params": [
+                    170
                   ],
                   "type": "gt"
                 },
@@ -504,13 +700,15 @@
           },
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "decimals": 0,
           "fill": 1,
           "id": 6,
           "legend": {
             "alignAsTable": true,
-            "avg": true,
+            "avg": false,
             "current": true,
             "hideEmpty": true,
             "hideZero": true,
@@ -531,7 +729,8 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 4,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -559,6 +758,7 @@
                 }
               ],
               "measurement": "ipmi_sensor",
+              "orderByTime": "ASC",
               "policy": "default",
               "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
               "rawQuery": false,
@@ -593,14 +793,8 @@
                 {
                   "condition": "AND",
                   "key": "name",
-                  "operator": "=~",
-                  "value": "/_temp$/"
-                },
-                {
-                  "condition": "AND",
-                  "key": "name",
-                  "operator": "!=",
-                  "value": "mb_10g_temp"
+                  "operator": "=",
+                  "value": "cpu_temp"
                 }
               ]
             },
@@ -628,6 +822,7 @@
                 }
               ],
               "measurement": "ipmi_sensor",
+              "orderByTime": "ASC",
               "policy": "default",
               "query": "SELECT max(\"value\") * 9/5 + 32 FROM \"ipmi_sensor\" WHERE \"host\" = 'filesrv.rob86.net' AND \"name\" =~ /_temp$/ AND $timeFilter GROUP BY time($interval), \"name\" fill(previous)",
               "rawQuery": false,
@@ -674,12 +869,12 @@
               "fill": true,
               "line": true,
               "op": "gt",
-              "value": 150
+              "value": 170
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "System Temp",
+          "title": "System High Temp",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -687,6 +882,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -726,6 +922,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "decimals": null,
           "fill": 1,
@@ -751,6 +949,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 6,
           "stack": false,
           "steppedLine": false,
@@ -824,6 +1023,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -851,6 +1051,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "decimals": 2,
           "fill": 1,
@@ -875,6 +1077,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 6,
           "stack": false,
           "steppedLine": false,
@@ -946,6 +1149,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -985,6 +1189,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "fill": 1,
           "id": 10,
@@ -1007,6 +1213,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -1152,6 +1359,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -1212,6 +1420,8 @@
           },
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "decimals": 1,
           "fill": 1,
@@ -1235,6 +1445,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -1314,6 +1525,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -1341,6 +1553,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "fill": 1,
           "id": 12,
@@ -1367,6 +1581,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -1509,6 +1724,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -1627,6 +1843,8 @@
           },
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "decimals": 2,
           "fill": 1,
@@ -1650,6 +1868,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -1803,6 +2022,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -1830,6 +2050,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "fill": 1,
           "id": 14,
@@ -1852,6 +2074,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -2162,6 +2385,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -2189,6 +2413,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "fill": 1,
           "id": 15,
@@ -2215,6 +2441,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -2274,6 +2501,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -2313,6 +2541,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "fill": 1,
           "id": 16,
@@ -2335,6 +2565,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -2485,6 +2716,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -2512,6 +2744,8 @@
         {
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "fill": 1,
           "id": 17,
@@ -2539,6 +2773,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -2598,6 +2833,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -2681,6 +2917,8 @@
           },
           "aliasColors": {},
           "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": "${DS_TELEGRAF}",
           "decimals": 2,
           "fill": 1,
@@ -2726,6 +2964,7 @@
               "yaxis": 2
             }
           ],
+          "spaceLength": 10,
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -2897,6 +3136,7 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
             "name": null,
             "show": true,
@@ -2937,7 +3177,7 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {
@@ -2967,5 +3207,5 @@
   },
   "timezone": "browser",
   "title": "FileSrv",
-  "version": 7
+  "version": 11
 }
