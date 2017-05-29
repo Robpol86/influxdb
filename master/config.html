@@ -114,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#influxdb">InfluxDB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#grafana">Grafana</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cronitor">Cronitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nmc">NMC</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="telegraf.html">Telegraf on the Server</a></li>
@@ -201,6 +202,8 @@ databases in the Docker containers.</p>
 <div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">USER</span> <span class="n">robpol86</span> <span class="k">WITH</span> <span class="n">PASSWORD</span> <span class="s1">&#39;REPLACE_ME&#39;</span> <span class="k">WITH</span> <span class="k">ALL</span> <span class="k">PRIVILEGES</span>
 <span class="n">AUTH</span>
 <span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">telegraf</span>
+<span class="k">CREATE</span> <span class="k">USER</span> <span class="n">telegraf_nmc</span> <span class="k">WITH</span> <span class="n">PASSWORD</span> <span class="s1">&#39;REPLACE_ME&#39;</span>
+<span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">TO</span> <span class="n">telegraf_nmc</span>
 <span class="k">CREATE</span> <span class="k">USER</span> <span class="n">telegraf_filesrv</span> <span class="k">WITH</span> <span class="n">PASSWORD</span> <span class="s1">&#39;REPLACE_ME&#39;</span>
 <span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">TO</span> <span class="n">telegraf_filesrv</span>
 <span class="k">CREATE</span> <span class="k">USER</span> <span class="n">telegraf_bosco</span> <span class="k">WITH</span> <span class="n">PASSWORD</span> <span class="s1">&#39;REPLACE_ME&#39;</span>
@@ -279,6 +282,26 @@ their own lines (file will consist of just two lines):</p>
 </dd></dl>
 
 </div>
+<div class="section" id="nmc">
+<h2>NMC<a class="headerlink" href="#nmc" title="Permalink to this headline">¶</a></h2>
+<p>Metrics are collected from my <a class="reference external" href="http://www.apc.com/shop/us/en/products/APC-Smart-UPS-1500VA-LCD-RM-2U-120V/P-SMT1500RM2U">UPS</a> through its <a class="reference external" href="http://www.apc.com/shop/us/en/products/UPS-Network-Management-Card-2-with-Environmental-Monitoring/P-AP9631">NMC</a> using SNMP. This container is just a Telegraf container with the
+<a class="reference external" href="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp">SNMP input plugin</a> configured for the NMC.</p>
+<dl class="describe">
+<dt>
+<code class="descname">.secrets/nmc</code></dt>
+<dd><p>Edit this file adding the InfluxDB <code class="docutils literal"><span class="pre">telegraf_nmc</span></code> user password for the first line and the SNMPv1 community string
+for the second line (file will consist of just two lines):</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>telegraf_nmc_password_here
+snmp_community_string_here
+</pre></div>
+</div>
+<p>Then restart the container:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo docker restart nmc
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -304,7 +327,7 @@ their own lines (file will consist of just two lines):</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on May 28, 2017, 10:40:07 PM UTC.
+      Last updated on May 29, 2017, 12:55:27 AM UTC.
 
     </p>
   </div>
@@ -328,7 +351,6 @@ their own lines (file will consist of just two lines):</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../nmc_snmp/config.html">nmc_snmp</a></dd>
             <dd><a href="config.html">master</a></dd>
         </dl>
     </div>
