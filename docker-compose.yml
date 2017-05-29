@@ -42,6 +42,13 @@ services:
     restart: always
     secrets: [cronitor]
 
+  nmc:
+    build: ./nmc
+    container_name: nmc
+    restart: always
+    secrets: [nmc]
+
 secrets:
   cronitor: {file: .secrets/cronitor}
   grafana: {file: .secrets/grafana.ini}
+  nmc: {file: .secrets/nmc}

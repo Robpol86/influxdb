@@ -18,10 +18,13 @@ contains the following containers:
 * `InfluxDB <https://docs.influxdata.com/influxdb>`_ to store all of the metrics (the central piece of the setup).
 * `Grafana <http://grafana.org>`_ to show pretty graphs and email me alerts.
 * `Cronitor <https://cronitor.io>`_ for external monitoring of my Docker host and home network.
+* `NMC`_ to include my UPS load, remaining runtime, and bedroom/living room temperatures in my Grafana graphs.
 
 I also use the following services:
 
 * `SparkPost <https://www.sparkpost.com/pricing>`_ free tier for sending alerts emails.
+
+.. _NMC: http://www.apc.com/shop/us/en/products/UPS-Network-Management-Card-2-with-Environmental-Monitoring/P-AP9631
 
 .. summary-section-end
 
@@ -45,7 +48,7 @@ prepare your secrets by creating empty files with the right permissions:
     sudo mkdir /opt/influxdb; cd $_
     sudo git clone https://github.com/Robpol86/influxdb.git .
     sudo mkdir -m0750 .secrets
-    for f in cronitor grafana.ini; do
+    for f in cronitor grafana.ini nmc; do
         sudo touch .secrets/$f; sudo chmod 0600 $_
     done
 

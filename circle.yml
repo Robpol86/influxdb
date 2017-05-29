@@ -29,6 +29,7 @@ jobs:
           command: |
             docker-compose config
             docker build cronitor
+            docker build nmc
 
       - deploy:
           name: Build and Upload Docs

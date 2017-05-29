@@ -18,6 +18,8 @@ InfluxDB
     CREATE USER robpol86 WITH PASSWORD 'REPLACE_ME' WITH ALL PRIVILEGES
     AUTH
     CREATE DATABASE telegraf
+    CREATE USER telegraf_nmc WITH PASSWORD 'REPLACE_ME'
+    GRANT ALL TO telegraf_nmc
     CREATE USER telegraf_filesrv WITH PASSWORD 'REPLACE_ME'
     GRANT ALL TO telegraf_filesrv
     CREATE USER telegraf_bosco WITH PASSWORD 'REPLACE_ME'
@@ -88,3 +90,29 @@ problem: `Cronitor <https://cronitor.io>`_
     .. code-block:: bash
 
         sudo docker restart cronitor
+
+NMC
+===
+
+Metrics are collected from my `UPS`_ through its `NMC`_ using SNMP. This container is just a Telegraf container with the
+`SNMP input plugin <https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp>`_ configured for the NMC.
+
+.. describe:: .secrets/nmc
+
+    Edit this file adding the InfluxDB ``telegraf_nmc`` user password for the first line and the SNMPv1 community string
+    for the second line (file will consist of just two lines):
+
+    .. code-block:: text
+
+        telegraf_nmc_password_here
+        snmp_community_string_here
+
+    Then restart the container:
+
+    .. code-block:: bash
+
+        sudo docker restart nmc
+
+.. _UPS: http://www.apc.com/shop/us/en/products/APC-Smart-UPS-1500VA-LCD-RM-2U-120V/P-SMT1500RM2U
+.. _NMC: http://www.apc.com/shop/us/en/products/UPS-Network-Management-Card-2-with-Environmental-Monitoring/P-AP9631
+.. _SNMP input plugin: https://github.com/influxdata/telegraf/tree/master/plugins/inputs/snmp
