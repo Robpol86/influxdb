@@ -2874,7 +2874,7 @@
                 "query": {
                   "params": [
                     "A",
-                    "5m",
+                    "1h",
                     "now"
                   ]
                 },
@@ -2897,7 +2897,7 @@
                 "query": {
                   "params": [
                     "B",
-                    "5m",
+                    "1h",
                     "now"
                   ]
                 },
@@ -2993,6 +2993,7 @@
                 }
               ],
               "measurement": "dns_query",
+              "orderByTime": "ASC",
               "policy": "default",
               "refId": "C",
               "resultFormat": "time_series",
@@ -3042,6 +3043,7 @@
                 }
               ],
               "measurement": "ping",
+              "orderByTime": "ASC",
               "policy": "default",
               "refId": "A",
               "resultFormat": "time_series",
@@ -3091,6 +3093,7 @@
                 }
               ],
               "measurement": "ping",
+              "orderByTime": "ASC",
               "policy": "default",
               "refId": "B",
               "resultFormat": "time_series",
@@ -3207,5 +3210,5 @@
   },
   "timezone": "browser",
   "title": "FileSrv",
-  "version": 11
+  "version": 13
 }
