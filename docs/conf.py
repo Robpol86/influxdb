@@ -21,8 +21,8 @@ extensions = list()
 html_context = dict(
     conf_py_path='/docs/',
     display_github=True,
-    github_repo=os.environ.get('TRAVIS_REPO_SLUG', '/' + project).split('/', 1)[1],
-    github_user=os.environ.get('TRAVIS_REPO_SLUG', 'robpol86/').split('/', 1)[0],
+    github_repo=os.environ.get('CIRCLE_PROJECT_REPONAME', 'influxdb'),
+    github_user=os.environ.get('CIRCLE_PROJECT_USERNAME', 'robpol86'),
     github_version=os.environ.get('TRAVIS_BRANCH', 'master'),
     source_suffix='.rst',
 )

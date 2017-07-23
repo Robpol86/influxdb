@@ -33,7 +33,7 @@ outside of Docker. I put it in ``/etc``:
 
     # SCP filesrv.rob86.net.cert.pem and filesrv.rob86.net.key.pem to home directory.
     cat *.key.pem *.cert.pem > filesrv.rob86.net.pem
-    for f in *.pem; do sudo sh -c "umask 0277 && cp $HOME/$f /etc/$f"; done
+    for f in *.pem; do sudo sh -c "umask 0277 && cp $PWD/$f /etc/$f"; done
     sudo chmod 444 /etc/filesrv.rob86.net.cert.pem
     rm ~/*.pem
 
@@ -56,18 +56,10 @@ which is what I want. I installed Docker with these commands:
     sudo dnf remove docker docker-common container-selinux docker-selinux
     sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
     sudo dnf makecache fast
-    sudo dnf install docker-ce
+    sudo dnf install docker-ce docker-compose
     sudo systemctl start docker
     sudo systemctl enable docker
     sudo docker run hello-world
-
-And I ran these commands to install Compose:
-
-.. code-block:: bash
-
-    version=$(curl -s https://api.github.com/repos/docker/compose/releases/latest |jq --raw-output .name)
-    url="https://github.com/docker/compose/releases/download/$version/docker-compose-Linux-$(uname -m)"
-    sudo curl -L $url -o /usr/local/bin/docker-compose; sudo chmod +x $_
 
 /etc/resolv.conf Fix
 --------------------
