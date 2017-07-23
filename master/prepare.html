@@ -171,7 +171,7 @@
         
             
             
-              <a href="https://github.com/robpol86/InfluxDB Home Monitoring/blob/master/docs/prepare.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/Robpol86/influxdb/blob/master/docs/prepare.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -215,7 +215,7 @@ my server which is required by the SSL certificate.</p>
 outside of Docker. I put it in <code class="docutils literal"><span class="pre">/etc</span></code>:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># SCP filesrv.rob86.net.cert.pem and filesrv.rob86.net.key.pem to home directory.</span>
 cat *.key.pem *.cert.pem &gt; filesrv.rob86.net.pem
-<span class="k">for</span> f in *.pem<span class="p">;</span> <span class="k">do</span> sudo sh -c <span class="s2">&quot;umask 0277 &amp;&amp; cp </span><span class="nv">$HOME</span><span class="s2">/</span><span class="nv">$f</span><span class="s2"> /etc/</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">done</span>
+<span class="k">for</span> f in *.pem<span class="p">;</span> <span class="k">do</span> sudo sh -c <span class="s2">&quot;umask 0277 &amp;&amp; cp </span><span class="nv">$PWD</span><span class="s2">/</span><span class="nv">$f</span><span class="s2"> /etc/</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">done</span>
 sudo chmod <span class="m">444</span> /etc/filesrv.rob86.net.cert.pem
 rm ~/*.pem
 </pre></div>
@@ -234,16 +234,10 @@ which is what I want. I installed Docker with these commands:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>sudo dnf remove docker docker-common container-selinux docker-selinux
 sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 sudo dnf makecache fast
-sudo dnf install docker-ce
+sudo dnf install docker-ce docker-compose
 sudo systemctl start docker
 sudo systemctl <span class="nb">enable</span> docker
 sudo docker run hello-world
-</pre></div>
-</div>
-<p>And I ran these commands to install Compose:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">version</span><span class="o">=</span><span class="k">$(</span>curl -s https://api.github.com/repos/docker/compose/releases/latest <span class="p">|</span>jq --raw-output .name<span class="k">)</span>
-<span class="nv">url</span><span class="o">=</span><span class="s2">&quot;https://github.com/docker/compose/releases/download/</span><span class="nv">$version</span><span class="s2">/docker-compose-Linux-</span><span class="k">$(</span>uname -m<span class="k">)</span><span class="s2">&quot;</span>
-sudo curl -L <span class="nv">$url</span> -o /usr/local/bin/docker-compose<span class="p">;</span> sudo chmod +x <span class="nv">$_</span>
 </pre></div>
 </div>
 <div class="section" id="etc-resolv-conf-fix">
@@ -338,7 +332,7 @@ sudo docker run --rm alpine:latest ls /tmp/does_not_exist.txt
   <div role="contentinfo">
     <p>
         &copy; Copyright 2017, @Robpol86.
-      Last updated on May 28, 2017, 10:40:07 PM UTC.
+      Last updated on Jul 23, 2017, 5:36:27 PM UTC.
 
     </p>
   </div>
@@ -362,7 +356,6 @@ sudo docker run --rm alpine:latest ls /tmp/does_not_exist.txt
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../fixes/prepare.html">fixes</a></dd>
             <dd><a href="prepare.html">master</a></dd>
         </dl>
     </div>
